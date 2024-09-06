@@ -1,1 +1,1 @@
-# A Discord Bot written in Rust
+# A Discord API wrapper for Rust
