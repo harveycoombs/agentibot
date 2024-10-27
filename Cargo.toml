@@ -1,9 +1,0 @@
-[package]
-name = "discord-api-wrapper"
-version = "0.1.0"
-edition = "2021"
-
-[dependencies]
-reqwest = "0.12.7"
-serde = "1.0.210"
-serde_json = "1.0.128"
