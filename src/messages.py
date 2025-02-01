@@ -13,8 +13,8 @@ class Messages:
         return messages
     
     async def get_message(channel_id, message_id):
-        messages = await DiscordAPI.get(f"channels/{channel_id}/messages/{message_id}")
-        return messages
+        message = await DiscordAPI.get(f"channels/{channel_id}/messages/{message_id}")
+        return message
     
     async def create_message(channel_id, content, embeds=None, components=None):
         await DiscordAPI.post(f"channels/{channel_id}/messages", {
