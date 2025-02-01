@@ -4,7 +4,7 @@
 
 Create a `config.json` file with the following:
 
-```json
+```js
 {
     "token": "YOUR_BOT_TOKEN",
     "application_id": "YOUR_APPLICATION_ID",
