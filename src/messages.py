@@ -2,8 +2,10 @@ import json
 
 from utils.api import DiscordAPI
 
+CONFIG = json.load(open("../config.json"))
+
 class Messages:
-    embed_color = 16471634
+    embed_color = CONFIG["embed_color"]
 
     @staticmethod
     async def get_messages(channel_id):
