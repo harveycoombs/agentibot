@@ -23,35 +23,20 @@ class Events:
                 if message_author_id != CONFIG["application_id"]:
                     channel_id = event_data["channel_id"]
 
-                    messages = await Messages.get_messages(channel_id)
-                    response = await AI.generate_text_response(event_data["content"], messages)
+                    response = await AI.respond_to_command(event_data["content"])
 
-                    await Messages.create_message(channel_id, response)
-                return
-            case "MESSAGE_UPDATE":
-                #await Messages.create_message(system_channel_id, None, [{
-                #    "author": {
-                #        "name": message_author["username"],
-                #        "icon_url": message_author["avatar_url"]
-                #    },
-                #    "title": ":pencil2: Message Edited",
-                #    "description": f"`{message['content']}`",
-                #    "color": Messages.embed_color
-                #}])
-                return
-            case "MESSAGE_DELETE":
-                #await Messages.create_message(system_channel_id, None, [{
-                #    "author": {
-                #        "name": message_author["username"],
-                #        "icon_url": message_author["avatar_url"]
-                #    },
-                #    "title": ":wastebasket: Message Deleted",
-                #    "description": f"`{message['content']}`",
-                #    "color": Messages.embed_color
-                #}])
+                    if response.startswith("ADD_ROLE"):
+                        role_name = response.split("ADD_ROLE ")[1]
+                        await Messages.create_message(channel_id, f"Added the {role_name} role to you.")
+                    elif response.startswith("REMOVE_ROLE"):
+                        role_name = response.split("REMOVE_ROLE ")[1]
+                        await Messages.create_message(channel_id, f"Removed the {role_name} role from you.")
+                    else:
+                        await Messages.create_message(channel_id, response)
                 return
             case "GUILD_CREATE":
                 system_channel_id = event_data["system_channel_id"]
+
 
                 await Messages.create_message(system_channel_id, None, [{
                     "title": ":wave: Thank you for inviting me to your server!",
