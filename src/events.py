@@ -21,8 +21,9 @@ class Events:
             case "MESSAGE_CREATE":
                 author_id = event_data["author"]["id"]
 
-                print(author_id, CONFIG["application_id"])
-                
+                if author_id == CONFIG["application_id"] or CONFIG["application_id"] not in [mention["id"] for mention in event_data["mentions"]]:
+                    return
+
                 guild_id = event_data["guild_id"]
                 channel_id = event_data["channel_id"]
 
@@ -34,15 +35,16 @@ class Events:
                     role = next((role for role in roles if role["name"].lower() == role_name.lower()), None)
 
                     if role is None:
-                        await Messages.create_message(channel_id, f":warning: Role not found.")
+                        await Messages.add_reaction(channel_id, event_data["id"], ":warning:")
                         return
                     
                     await Roles.add_role_to_user(guild_id, author_id, role["id"])
-                    await Messages.create_message(channel_id, f":white_check_mark: Added the {role_name} role to you.")
+                    await Messages.add_reaction(channel_id, event_data["id"], ":white_check_mark:")
+                else:
+                    await Messages.create_message(channel_id, response)
                 return
             case "GUILD_CREATE":
                 system_channel_id = event_data["system_channel_id"]
-
 
                 await Messages.create_message(system_channel_id, None, [{
                     "title": ":wave: Thank you for inviting me to your server!",

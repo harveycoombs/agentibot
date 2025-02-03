@@ -34,11 +34,20 @@ class DiscordAPI:
             headers.update(additional_headers)
         
         async with aiohttp.ClientSession() as session:
-            async with session.post(f"{DiscordAPI.BASE_URL}{endpoint}", json=payload, headers=headers) as response:
-                try:
-                    return await response.json()
-                except:
-                    return await response.text()
+            if payload is not None: 
+                async with session.post(f"{DiscordAPI.BASE_URL}{endpoint}", json=payload, headers=headers) as response:
+                    try:
+                        return await response.json()
+
+                    except:
+                        return await response.text()
+            else:
+                async with session.post(f"{DiscordAPI.BASE_URL}{endpoint}", headers=headers) as response:
+                    try:
+                        return await response.json()
+                    except:
+                        return await response.text()
+
 
 
     @staticmethod
