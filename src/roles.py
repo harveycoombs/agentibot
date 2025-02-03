@@ -24,3 +24,11 @@ class Roles:
     @staticmethod
     async def delete_role(guild_id, role_id):
         await DiscordAPI.delete(f"guilds/{guild_id}/roles/{role_id}")
+
+    @staticmethod
+    async def add_role_to_user(guild_id, user_id, role_id):
+        await DiscordAPI.put(f"guilds/{guild_id}/members/{user_id}/roles/{role_id}", payload=None)
+
+    @staticmethod
+    async def remove_role_from_user(guild_id, user_id, role_id):
+        await DiscordAPI.delete(f"guilds/{guild_id}/members/{user_id}/roles/{role_id}")

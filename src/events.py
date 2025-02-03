@@ -1,6 +1,7 @@
 import json
 
 from messages import Messages
+from roles import Roles
 from utils.ai import AI
 
 CONFIG = json.load(open("../config.json"))
@@ -18,21 +19,26 @@ class Events:
                 print(f"Discord Gateway: Ready")
                 return
             case "MESSAGE_CREATE":
-                message_author_id = event_data["author"]["id"]
+                author_id = event_data["author"]["id"]
 
-                if message_author_id != CONFIG["application_id"]:
-                    channel_id = event_data["channel_id"]
+                print(author_id, CONFIG["application_id"])
+                
+                guild_id = event_data["guild_id"]
+                channel_id = event_data["channel_id"]
 
-                    response = await AI.respond_to_command(event_data["content"])
+                response = await AI.respond_to_command(event_data["content"])
 
-                    if response.startswith("ADD_ROLE"):
-                        role_name = response.split("ADD_ROLE ")[1]
-                        await Messages.create_message(channel_id, f"Added the {role_name} role to you.")
-                    elif response.startswith("REMOVE_ROLE"):
-                        role_name = response.split("REMOVE_ROLE ")[1]
-                        await Messages.create_message(channel_id, f"Removed the {role_name} role from you.")
-                    else:
-                        await Messages.create_message(channel_id, response)
+                if response.startswith("ADD_ROLE"):
+                    role_name = response.split("ADD_ROLE ")[1].strip()
+                    roles = await Roles.get_roles(guild_id)
+                    role = next((role for role in roles if role["name"].lower() == role_name.lower()), None)
+
+                    if role is None:
+                        await Messages.create_message(channel_id, f":warning: Role not found.")
+                        return
+                    
+                    await Roles.add_role_to_user(guild_id, author_id, role["id"])
+                    await Messages.create_message(channel_id, f":white_check_mark: Added the {role_name} role to you.")
                 return
             case "GUILD_CREATE":
                 system_channel_id = event_data["system_channel_id"]
