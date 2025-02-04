@@ -12,8 +12,7 @@ class Members:
         return member
     
     @staticmethod
-    async def update_member(guild_id, user_id, nickname, roles=None):
+    async def update_member(guild_id, user_id, nickname):
         await DiscordAPI.patch(f"guilds/{guild_id}/members/{user_id}", {
-            "nick": nickname,
-            "roles": roles
+            "nick": nickname
         })

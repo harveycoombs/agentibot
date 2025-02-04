@@ -3,6 +3,7 @@ import json
 from messages import Messages
 from roles import Roles
 from utils.ai import AI
+from members import Members
 
 CONFIG = json.load(open("../config.json"))
 
@@ -46,14 +47,20 @@ class Events:
                     role = next((role for role in roles if role["name"].lower() == role_name.lower()), None)
 
                     if role is None:
-                        await Messages.create_message(channel_id, ":warning: Sorry, I couldn't find that role.")
+                        await Messages.create_message(channel_id, f":warning: Sorry, I couldn't find the '{role_name}' role.")
                         return
                     
                     await Roles.remove_role_from_user(guild_id, author_id, role["id"])
-                    await Messages.create_message(channel_id, ":white_check_mark: I have removed that role from you.")
+                    await Messages.create_message(channel_id, f":white_check_mark: I have removed the '{role_name}' role from you.")
+                elif "CHANGE_NICKNAME" in response:
+                    nickname = response.split("CHANGE_NICKNAME ")[1].strip()
+                    
+                    await Members.update_member(guild_id, author_id, nickname)
+                    await Messages.create_message(channel_id, f":white_check_mark: I have changed your nickname to '{nickname}'.")
                 else:
                     await Messages.create_message(channel_id, response)
                 return
+
             case "GUILD_CREATE":
                 system_channel_id = event_data["system_channel_id"]
 
