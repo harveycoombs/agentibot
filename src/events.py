@@ -50,6 +50,7 @@ class Events:
                         return
                     
                     await Roles.remove_role_from_user(guild_id, author_id, role["id"])
+                    await Messages.create_message(channel_id, ":white_check_mark: I have removed that role from you.")
                 else:
                     await Messages.create_message(channel_id, response)
                 return
