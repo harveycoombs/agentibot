@@ -27,19 +27,29 @@ class Events:
                 guild_id = event_data["guild_id"]
                 channel_id = event_data["channel_id"]
 
-                response = await AI.respond_to_command(event_data["content"])
+                response = await AI.respond_to_command(event_data["content"].replace(f"<@!{CONFIG['application_id']}>", ""))
 
-                if response.startswith("ADD_ROLE"):
+                if "ADD_ROLE" in response:
                     role_name = response.split("ADD_ROLE ")[1].strip()
                     roles = await Roles.get_roles(guild_id)
                     role = next((role for role in roles if role["name"].lower() == role_name.lower()), None)
 
                     if role is None:
-                        await Messages.add_reaction(channel_id, event_data["id"], ":warning:")
+                        await Messages.create_message(channel_id, ":warning: Sorry, I couldn't find that role.")
                         return
                     
                     await Roles.add_role_to_user(guild_id, author_id, role["id"])
-                    await Messages.add_reaction(channel_id, event_data["id"], ":white_check_mark:")
+                    await Messages.create_message(channel_id, ":white_check_mark: I have added that role to you.")
+                elif "REMOVE_ROLE" in response:
+                    role_name = response.split("REMOVE_ROLE ")[1].strip()
+                    roles = await Roles.get_roles(guild_id)
+                    role = next((role for role in roles if role["name"].lower() == role_name.lower()), None)
+
+                    if role is None:
+                        await Messages.create_message(channel_id, ":warning: Sorry, I couldn't find that role.")
+                        return
+                    
+                    await Roles.remove_role_from_user(guild_id, author_id, role["id"])
                 else:
                     await Messages.create_message(channel_id, response)
                 return
