@@ -31,7 +31,7 @@ class Messages:
         })
 
     async def delete_message(channel_id, message_id):
-        await DiscordAPI.patch(f"channels/{channel_id}/messages/{message_id}")
+        await DiscordAPI.delete(f"channels/{channel_id}/messages/{message_id}")
 
     @staticmethod
     async def add_reaction(channel_id, message_id, emoji):

@@ -17,11 +17,13 @@ class DiscordAPI:
 
         async with aiohttp.ClientSession() as session:
             async with session.get(f"{DiscordAPI.BASE_URL}{endpoint}", headers=headers) as response:
+                if response.status != 200:
+                    raise Exception(await response.text())
+
                 try:
                     return await response.json()
                 except:
                     return await response.text()
-
 
     @staticmethod
     async def post(endpoint, payload, additional_headers=None):
@@ -36,6 +38,9 @@ class DiscordAPI:
         async with aiohttp.ClientSession() as session:
             if payload is not None: 
                 async with session.post(f"{DiscordAPI.BASE_URL}{endpoint}", json=payload, headers=headers) as response:
+                    if response.status != 200:
+                        raise Exception(await response.text())
+
                     try:
                         return await response.json()
 
@@ -47,8 +52,6 @@ class DiscordAPI:
                         return await response.json()
                     except:
                         return await response.text()
-
-
 
     @staticmethod
     async def patch(endpoint, payload, additional_headers=None):
@@ -62,11 +65,13 @@ class DiscordAPI:
 
         async with aiohttp.ClientSession() as session:
             async with session.patch(f"{DiscordAPI.BASE_URL}{endpoint}", json=payload, headers=headers) as response:
+                if response.status != 200:
+                    raise Exception(await response.text())
+
                 try:
                     return await response.json()
                 except:
                     return await response.text()
-
 
     @staticmethod
     async def put(endpoint, payload, additional_headers=None):
@@ -81,6 +86,9 @@ class DiscordAPI:
         async with aiohttp.ClientSession() as session:
             if payload is not None:
                 async with session.put(f"{DiscordAPI.BASE_URL}{endpoint}", json=payload, headers=headers) as response:
+                    if response.status != 200:
+                        raise Exception(await response.text())
+
                     try:
                         return await response.json()
                     except:
@@ -91,7 +99,6 @@ class DiscordAPI:
                         return await response.json()
                     except:
                         return await response.text()
-
 
     @staticmethod
     async def delete(endpoint, payload=None, additional_headers=None):
@@ -106,12 +113,18 @@ class DiscordAPI:
         async with aiohttp.ClientSession() as session:
             if payload is not None:
                 async with session.delete(f"{DiscordAPI.BASE_URL}{endpoint}", json=payload, headers=headers) as response:
+                    if response.status != 200:
+                        raise Exception(await response.text())
+
                     try:
                         return await response.json()
                     except:
                         return await response.text()
             else:
                 async with session.delete(f"{DiscordAPI.BASE_URL}{endpoint}", headers=headers) as response:
+                    if response.status != 200:
+                        raise Exception(await response.text())
+
                     try:
                         return await response.json()
                     except:
