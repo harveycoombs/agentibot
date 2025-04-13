@@ -72,7 +72,7 @@ class Events:
                     print(e)
                     return
                 
-            case "GUILD_CREATE1":
+            case "GUILD_CREATE":
                 system_channel_id = event_data["system_channel_id"]
         
                 await Messages.create_message(system_channel_id, None, [{
