@@ -1,4 +1,4 @@
-# Discord Bot ~ Written by Harvey Coombs ~ 2020-2024
+# Vesper ~ vesper.gg ~ Written by Harvey Coombs ~ 2020-2024
 import asyncio
 
 from gateway import Gateway
