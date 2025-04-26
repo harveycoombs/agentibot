@@ -84,9 +84,9 @@ class Events:
                     "components": [
                         {
                             "type": 2,
-                            "label": "View on GitHub",
+                            "label": "Website",
                             "style": 5,
-                            "url": "https://github.com/harveycoombs/discord-bot"
+                            "url": "https://vesper.gg"
                         }
                     ]
                 }])
