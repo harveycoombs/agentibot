@@ -24,13 +24,6 @@ class Events:
                 guild_id = event_data["guild_id"]
                 channel_id = event_data["channel_id"]
 
-                banned_phrases = json.load(open("../banned.json"))["phrases"]
-
-                for phrase in banned_phrases:
-                    if phrase in event_data["content"].lower():
-                        await Messages.delete_message(channel_id, event_data["id"])
-                        return
-
                 if author_id == CONFIG["application_id"] or CONFIG["application_id"] not in [mention["id"] for mention in event_data["mentions"]]:
                     return
 
