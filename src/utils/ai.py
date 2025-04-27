@@ -9,14 +9,6 @@ class AI:
         }
 
     @staticmethod
-    async def generate_text_response(messages, model="deepseek-v2:lite"):
-        context = map(AI.format_message, messages)
-
-        response = ollama.chat(model=model, messages=context)
-        return response["message"]["content"]
-    
-    
-    @staticmethod
     async def respond_to_command(prompt, messages=[]):
         message_history = map(AI.format_message, messages)
 
