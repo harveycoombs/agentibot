@@ -1,5 +1,6 @@
 import json
 
+from channels import Channels
 from messages import Messages
 from roles import Roles
 from utils.ai import AI
@@ -57,6 +58,10 @@ class Events:
                         
                         await Members.update_member(guild_id, author_id, nickname)
                         await Messages.create_message(channel_id, f":white_check_mark: I have changed your nickname to '{nickname}'.")
+                    elif "CREATE_CHANNEL" in response:
+                        channel_name = response.split("CREATE_CHANNEL ")[1].strip()
+                        await Channels.create_channel(guild_id, channel_name)
+                        await Messages.create_message(channel_id, f":white_check_mark: I have created a new channel called '{channel_name}'.")
                     else:
                         await Messages.create_message(channel_id, response)
                     return
