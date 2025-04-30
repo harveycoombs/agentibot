@@ -1,6 +1,7 @@
 import json
 import requests
 
+from channels import Channels
 from messages import Messages
 from roles import Roles
 from utils.ai import AI
@@ -38,13 +39,6 @@ class Events:
                 guild_id = event_data["guild_id"]
                 channel_id = event_data["channel_id"]
 
-                banned_phrases = json.load(open("../banned.json"))["phrases"]
-
-                for phrase in banned_phrases:
-                    if phrase in event_data["content"].lower():
-                        await Messages.delete_message(channel_id, event_data["id"])
-                        return
-
                 if author_id == CONFIG["application_id"] or CONFIG["application_id"] not in [mention["id"] for mention in event_data["mentions"]]:
                     return
 
@@ -78,6 +72,10 @@ class Events:
                         
                         await Members.update_member(guild_id, author_id, nickname)
                         await Messages.create_message(channel_id, f":white_check_mark: I have changed your nickname to '{nickname}'.")
+                    elif "CREATE_CHANNEL" in response:
+                        channel_name = response.split("CREATE_CHANNEL ")[1].strip()
+                        await Channels.create_channel(guild_id, channel_name)
+                        await Messages.create_message(channel_id, f":white_check_mark: I have created a new channel called '{channel_name}'.")
                     else:
                         await Messages.create_message(channel_id, response)
                     return
@@ -98,9 +96,9 @@ class Events:
                     "components": [
                         {
                             "type": 2,
-                            "label": "View on GitHub",
+                            "label": "Website",
                             "style": 5,
-                            "url": "https://github.com/harveycoombs/discord-bot"
+                            "url": "https://vesper.gg"
                         }
                     ]
                 }])

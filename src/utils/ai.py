@@ -4,23 +4,39 @@ class AI:
     @staticmethod
     def format_message(message):
         return {
-            "role": "user",
-            "content": message.content
+            "role": "assistant" if message["author"]["bot"] else "user",
+            "content": message["content"]
         }
 
     @staticmethod
-    async def generate_text_response(messages, model="deepseek-v2:lite"):
-        context = map(AI.format_message, messages)
+    async def respond_to_command(prompt, messages=[]):
+        message_history = map(AI.format_message, messages)
 
-        response = ollama.chat(model=model, messages=context)
-        return response["message"]["content"]
-    
-    
-    @staticmethod
-    async def respond_to_command(prompt):
-        response = ollama.chat(model="gemma3:12b", messages=[{
+        all_messages = list(message_history) + [{
             "role": "user",
-            "content": f"FYI, you were created by somebody called Harvey. I am going to give you the following key: 'ADD_ROLE {{name}}' = the user wants to add a specific role to themselves, by providing the name of it. 'REMOVE_ROLE {{name}}' = the user wants to remove a specific role from themselves, by providing the name of it. 'CHANGE_NICKNAME {{name}}' = the user wants to change their nickname to the name provided. Please only reply with the command and make sure to substitute the '{{name}}' placeholder with the name of the role they have provided. If you cannot match up the user's prompt with an existing command, respond to their prompt as you normally would. With that being said, here is the user's prompt: {prompt}",
-        }])
+            "content": f"""
+                You are Vesper, an intelligent AI Discord bot created by Harvey Coombs. Your purpose is to assist users with various Discord-related tasks.
 
+                INSTRUCTIONS:
+                Analyze the user's prompt below and determine their intent. If they are requesting one of the following actions, respond ONLY with the exact command format specified:
+
+                1. ADD_ROLE {{role_name}} - When a user wants to add a role to themselves
+                   Example: If user says "Can I get the Gamer role?", respond with "ADD_ROLE Gamer"
+
+                2. REMOVE_ROLE {{role_name}} - When a user wants to remove a role from themselves
+                   Example: If user says "Please remove my Admin role", respond with "REMOVE_ROLE Admin"
+
+                3. CHANGE_NICKNAME {{new_nickname}} - When a user wants to change their nickname
+                   Example: If user says "Change my name to CoolUser", respond with "CHANGE_NICKNAME CoolUser"
+
+                4. CREATE_CHANNEL {{channel_name}} - When a user wants to create a new channel
+                   Example: If user says "Can I get a channel called 'random'", respond with "CREATE_CHANNEL random"
+
+                If the user's request doesn't match any of these commands, respond conversationally as a helpful assistant. Do not explain the commands or your reasoning process in your response.
+
+                USER PROMPT: {prompt}
+            """
+        }]
+
+        response = ollama.chat(model="gemma3:12b", messages=all_messages)
         return response["message"]["content"]
