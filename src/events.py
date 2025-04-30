@@ -1,4 +1,5 @@
 import json
+import requests
 
 from messages import Messages
 from roles import Roles
@@ -17,7 +18,20 @@ class Events:
 
         match event_type:
             case "READY":
-                print(f"Discord Gateway: Ready")
+                guild_count = len(event_data["guilds"])
+
+                try:
+                    response = requests.post("https://vesper.gg/api/counter", json={
+                        "token": CONFIG["token"],
+                        "count": guild_count
+                    })
+
+                    if response.status_code != 200:
+                        print(f"Failed to update guild counter: {response.json()["message"]}")
+                except Exception as e:
+                    print(f"Failed to update guild counter: {e}")
+
+                print(f"Discord Gateway: Ready in {guild_count} guilds")
                 return
             case "MESSAGE_CREATE":
                 author_id = event_data["author"]["id"]
