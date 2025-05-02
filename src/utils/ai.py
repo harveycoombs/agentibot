@@ -32,6 +32,13 @@ class AI:
                 4. CREATE_CHANNEL {{channel_name}} - When a user wants to create a new channel
                    Example: If user says "Can I get a channel called 'random'", respond with "CREATE_CHANNEL random"
 
+                5. DELETE_CHANNEL - When a user wants to delete a channel
+                   Example: If user says "Can I delete this channel", respond with "DELETE_CHANNEL"
+
+                6. DELETE_MESSAGE - When a user wants to delete a message
+                   Example: If user says "Can I delete this message", respond with "DELETE_MESSAGE"
+
+
                 If the user's request doesn't match any of these commands, respond conversationally as a helpful assistant. Do not explain the commands or your reasoning process in your response.
 
                 USER PROMPT: {prompt}
