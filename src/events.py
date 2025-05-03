@@ -72,16 +72,16 @@ class Events:
                         
                         await Members.update_member(guild_id, author_id, nickname)
                         await Messages.create_message(channel_id, f":white_check_mark: I have changed your nickname to '{nickname}'.")
-                    elif "CREATE_CHANNEL" in response:
-                        channel_name = response.split("CREATE_CHANNEL ")[1].strip()
+                    elif "CREATE_TEXT_CHANNEL" in response:
+                        channel_name = response.split("CREATE_TEXT_CHANNEL ")[1].strip()
+                        new_channel_id = await Channels.create_channel(guild_id, channel_name)
 
-                        await Channels.create_channel(guild_id, channel_name)
-                        await Messages.create_message(channel_id, f":white_check_mark: I have created the referenced channel.")
-                    elif "DELETE_CHANNEL" in response:
-                        channel_name = response.split("DELETE_CHANNEL ")[1].strip()
+                        await Messages.create_message(channel_id, f":white_check_mark: I have created the <#{new_channel_id}> channel.")
+                    elif "CREATE_VOICE_CHANNEL" in response:
+                        channel_name = response.split("CREATE_VOICE_CHANNEL ")[1].strip()
+                        new_channel_id = await Channels.create_channel(guild_id, channel_name, 2)
 
-                        await Channels.delete_channel(guild_id, channel_name)
-                        await Messages.create_message(channel_id, f":white_check_mark: I have deleted the referenced channel.")
+                        await Messages.create_message(channel_id, f":white_check_mark: I have created the <#{new_channel_id}> channel.")
                     elif "DELETE_MESSAGE" in response:
                         referenced_message_id = event_data["referenced_message"]["id"] if "referenced_message" in event_data else None
 

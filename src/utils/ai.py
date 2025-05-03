@@ -29,13 +29,16 @@ class AI:
                 3. CHANGE_NICKNAME {{new_nickname}} - When a user wants to change their nickname
                    Example: If user says "Change my name to CoolUser", respond with "CHANGE_NICKNAME CoolUser"
 
-                4. CREATE_CHANNEL {{channel_name}} - When a user wants to create a new channel
-                   Example: If user says "Can I get a channel called 'random'", respond with "CREATE_CHANNEL random"
+                4. CREATE_TEXT_CHANNEL {{channel_name}} - When a user wants to create a new text channel
+                   Example: If user says "Can I get a channel called 'random'", respond with "CREATE_TEXT_CHANNEL random"
 
-                5. DELETE_CHANNEL - When a user wants to delete a channel
+                5. CREATE_VOICE_CHANNEL {{channel_name}} - When a user wants to create a new voice channel
+                   Example: If user says "Can I get a voice channel called 'random'", respond with "CREATE_VOICE_CHANNEL random"
+
+                6. DELETE_CHANNEL - When a user wants to delete a channel
                    Example: If user says "Can I delete this channel", respond with "DELETE_CHANNEL"
 
-                6. DELETE_MESSAGE - When a user wants to delete a message
+                7. DELETE_MESSAGE - When a user wants to delete a message
                    Example: If user says "Can I delete this message", respond with "DELETE_MESSAGE"
 
 

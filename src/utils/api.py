@@ -17,7 +17,7 @@ class DiscordAPI:
 
         async with aiohttp.ClientSession() as session:
             async with session.get(f"{DiscordAPI.BASE_URL}{endpoint}", headers=headers) as response:
-                if response.status != 200:
+                if response.status >= 400:
                     raise Exception(await response.text())
 
                 try:
@@ -38,7 +38,7 @@ class DiscordAPI:
         async with aiohttp.ClientSession() as session:
             if payload is not None: 
                 async with session.post(f"{DiscordAPI.BASE_URL}{endpoint}", json=payload, headers=headers) as response:
-                    if response.status != 200:
+                    if response.status >= 400:
                         raise Exception(await response.text())
 
                     try:
@@ -65,7 +65,7 @@ class DiscordAPI:
 
         async with aiohttp.ClientSession() as session:
             async with session.patch(f"{DiscordAPI.BASE_URL}{endpoint}", json=payload, headers=headers) as response:
-                if response.status != 200:
+                if response.status >= 400:
                     raise Exception(await response.text())
 
                 try:
@@ -86,7 +86,7 @@ class DiscordAPI:
         async with aiohttp.ClientSession() as session:
             if payload is not None:
                 async with session.put(f"{DiscordAPI.BASE_URL}{endpoint}", json=payload, headers=headers) as response:
-                    if response.status != 200:
+                    if response.status >= 400:
                         raise Exception(await response.text())
 
                     try:
@@ -113,7 +113,7 @@ class DiscordAPI:
         async with aiohttp.ClientSession() as session:
             if payload is not None:
                 async with session.delete(f"{DiscordAPI.BASE_URL}{endpoint}", json=payload, headers=headers) as response:
-                    if response.status != 200:
+                    if response.status >= 400:
                         raise Exception(await response.text())
 
                     try:
@@ -122,7 +122,7 @@ class DiscordAPI:
                         return await response.text()
             else:
                 async with session.delete(f"{DiscordAPI.BASE_URL}{endpoint}", headers=headers) as response:
-                    if response.status != 200:
+                    if response.status >= 400:
                         raise Exception(await response.text())
 
                     try:
