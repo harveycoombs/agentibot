@@ -1,5 +1,4 @@
 import json
-import requests
 
 from channels import Channels
 from messages import Messages
@@ -22,11 +21,6 @@ class Events:
                 guild_count = len(event_data["guilds"])
 
                 try:
-                    response = requests.post("https://vesper.gg/api/counter", json={
-                        "token": CONFIG["token"],
-                        "count": guild_count
-                    })
-
                     if response.status_code != 200:
                         print(f"Failed to update guild counter: {response.json()["message"]}")
                 except Exception as e:
