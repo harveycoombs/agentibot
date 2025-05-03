@@ -35,8 +35,8 @@ class AI:
                 5. CREATE_VOICE_CHANNEL {{channel_name}} - When a user wants to create a new voice channel
                    Example: If user says "Can I get a voice channel called 'random'", respond with "CREATE_VOICE_CHANNEL random"
 
-                6. DELETE_CHANNEL - When a user wants to delete a channel
-                   Example: If user says "Can I delete this channel", respond with "DELETE_CHANNEL"
+                6. DELETE_CHANNEL {{channel_id}} - When a user wants to delete a channel
+                   Example: If user says "Can I delete this channel", respond with "DELETE_CHANNEL <#12345678910111213140>"
 
                 7. DELETE_MESSAGE - When a user wants to delete a message
                    Example: If user says "Can I delete this message", respond with "DELETE_MESSAGE"

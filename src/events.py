@@ -82,6 +82,11 @@ class Events:
                         new_channel_id = await Channels.create_channel(guild_id, channel_name, 2)
 
                         await Messages.create_message(channel_id, f":white_check_mark: I have created the <#{new_channel_id}> channel.")
+                    elif "DELETE_CHANNEL" in response:
+                        target_channel_id = response.split("DELETE_CHANNEL ")[1].strip().replace("<#", "").replace(">", "")
+
+                        await Channels.delete_channel(target_channel_id)
+                        await Messages.create_message(channel_id, f":white_check_mark: I have deleted the <#{target_channel_id}> channel.")
                     elif "DELETE_MESSAGE" in response:
                         referenced_message_id = event_data["referenced_message"]["id"] if "referenced_message" in event_data else None
 
