@@ -19,13 +19,6 @@ class Events:
         match event_type:
             case "READY":
                 guild_count = len(event_data["guilds"])
-
-                try:
-                    if response.status_code != 200:
-                        print(f"Failed to update guild counter: {response.json()["message"]}")
-                except Exception as e:
-                    print(f"Failed to update guild counter: {e}")
-
                 print(f"Discord Gateway: Ready in {guild_count} guilds")
                 return
             case "MESSAGE_CREATE":
