@@ -1,4 +1,29 @@
-import ollama
+from langchain_ollama import ChatOllama
+from langchain.agents import initialize_agent, Tool
+from langchain.agents.agent_types import AgentType
+
+class Agent:
+    tools = [
+        Tool(
+            name="greet",
+            func=greet,
+            description="Greets a person by name. Input should be a string with the person's name."
+        )
+    ]
+
+    agent = initialize_agent(
+        tools=tools,
+        llm=ChatOllama(model="gemma3:12b"),
+        agent_type=AgentType.ZERO_SHOT_REACT_DESCRIPTION,
+        verbose=True
+    )
+
+    @staticmethod
+    def respond(prompt):
+        response = Agent.agent.run(prompt)
+        return response
+
+# to-do replace ai class with agentic toolchain
 
 class AI:
     @staticmethod
