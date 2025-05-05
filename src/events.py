@@ -3,8 +3,9 @@ import json
 from channels import Channels
 from messages import Messages
 from roles import Roles
-from utils.ai import AI
 from members import Members
+from utils.ai import AI
+from utils.status import update_guild_counter
 
 CONFIG = json.load(open("../config.json"))
 
@@ -19,6 +20,8 @@ class Events:
         match event_type:
             case "READY":
                 guild_count = len(event_data["guilds"])
+                update_guild_counter(guild_count)
+
                 print(f"Discord Gateway: Ready in {guild_count} guilds")
                 return
             case "MESSAGE_CREATE":
