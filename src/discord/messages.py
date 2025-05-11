@@ -1,6 +1,6 @@
 import json
 
-from utils.api import DiscordAPI
+from discord.api import DiscordAPI
 
 CONFIG = json.load(open("../config.json"))
 

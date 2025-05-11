@@ -1,4 +1,4 @@
-from utils.api import DiscordAPI
+from discord.api import DiscordAPI
 
 class Channels:
     @staticmethod

@@ -2,8 +2,8 @@ import websockets
 import asyncio
 import json
 
-from utils.api import DiscordAPI
-from events import Events
+from discord.api import DiscordAPI
+from discord.events import Events
 
 CONFIG = json.load(open("../config.json"))
 
