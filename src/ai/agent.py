@@ -12,44 +12,44 @@ class Agent:
             Tool(
                 name="add_role",
                 func=None,
-                description="Adds a role to a user. Input should be a string with the role's name.",
-                coroutine=lambda x: add_role(x, self.context["guild_id"], self.context["author"]["id"])
+                coroutine=lambda x: add_role(x, self.context["guild_id"], self.context["author"]["id"]),
+                description="Adds a role to a user. Input should be a string with the role's name."
             ),
             Tool(
                 name="remove_role",
                 func=None,
-                description="Removes a role from a user. Input should be a string with the role's name.",
-                coroutine=lambda x: remove_role(x, self.context["guild_id"], self.context["author"]["id"])
+                coroutine=lambda x: remove_role(x, self.context["guild_id"], self.context["author"]["id"]),
+                description="Removes a role from a user. Input should be a string with the role's name."
             ),
             Tool(
                 name="change_nickname",
                 func=None,
-                description="Changes the nickname of a user. Input should be a string with the new nickname.",
-                coroutine=lambda x: change_nickname(x, self.context["guild_id"], self.context["author"]["id"])
+                coroutine=lambda x: change_nickname(x, self.context["guild_id"], self.context["author"]["id"]),
+                description="Changes the nickname of a user. Input should be a string with the new nickname."
             ),
             Tool(
                 name="create_text_channel",
                 func=None,
-                description="Creates a text channel. Input should be a string with the channel's name.",
-                coroutine=lambda x: create_text_channel(x, self.context["guild_id"])
+                coroutine=lambda x: create_text_channel(x, self.context["guild_id"]),
+                description="Creates a text channel. Input should be a string with the channel's name."
             ),
             Tool(
                 name="create_voice_channel",
                 func=None,
-                description="Creates a voice channel. Input should be a string with the channel's name.",
-                coroutine=lambda x: create_voice_channel(x, self.context["guild_id"])
+                coroutine=lambda x: create_voice_channel(x, self.context["guild_id"]),
+                description="Creates a voice channel. Input should be a string with the channel's name."
             ),
             Tool(
                 name="delete_channel",
                 func=None,
-                description="Deletes the current channel.",
-                coroutine=lambda x: delete_channel(x, self.context["channel_id"])
+                coroutine=lambda x: delete_channel(x, self.context["channel_id"]),
+                description="Deletes the current channel."
             ),
             Tool(
                 name="delete_message",
                 func=None,
-                description="Deletes a message. Input should be a string with the message's content.",
-                coroutine=lambda x: delete_message(x)
+                coroutine=lambda x: delete_message(x),
+                description="Deletes a message. Input should be a string with the message's content."
             )
         ]
 
