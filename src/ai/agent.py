@@ -2,7 +2,7 @@ from langchain_ollama import ChatOllama
 from langchain.agents import initialize_agent, Tool
 from langchain.agents.agent_types import AgentType
 
-from ai.toolchain import add_role, remove_role, change_nickname, create_text_channel, create_voice_channel, delete_channel, delete_message
+from ai.toolchain import add_role, remove_role, change_nickname, create_text_channel, create_voice_channel, delete_channel, delete_message, ban_member, unban_member
 
 class Agent:
     def __init__(self, context: dict):
@@ -50,6 +50,18 @@ class Agent:
                 func=None,
                 coroutine=lambda x: delete_message(x),
                 description="Deletes a message. Input should be a string with the message's content."
+            ),
+            Tool(
+                name="ban_member",
+                func=None,
+                coroutine=lambda x: ban_member(x, self.context["guild_id"], self.context["mentions"][0]["id"]),
+                description="Bans a member. Input should be a string with the member's ID."
+            ),
+            Tool(
+                name="unban_member",
+                func=None,
+                coroutine=lambda x: unban_member(x, self.context["guild_id"], self.context["mentions"][0]["id"]),
+                description="Unbans a member. Input should be a string with the member's ID."
             )
         ]
 

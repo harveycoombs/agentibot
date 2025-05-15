@@ -16,3 +16,11 @@ class Members:
         await DiscordAPI.patch(f"guilds/{guild_id}/members/{user_id}", {
             "nick": nickname
         })
+
+    @staticmethod
+    async def ban_member(guild_id, user_id):
+        await DiscordAPI.post(f"guilds/{guild_id}/bans/{user_id}")
+
+    @staticmethod
+    async def unban_member(guild_id, user_id):
+        await DiscordAPI.delete(f"guilds/{guild_id}/bans/{user_id}")
