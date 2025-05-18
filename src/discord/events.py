@@ -1,6 +1,6 @@
 import json
 
-from utils.status import update_guild_counter
+from utils import update_guild_counter
 from discord.messages import Messages
 from ai.agent import Agent
 
@@ -32,7 +32,7 @@ class Events:
                     agent = Agent(context=event_data)
                     response = await agent.respond(event_data["content"].replace(f"<@!{CONFIG['application_id']}>", ""))
 
-                    await Messages.create_message(channel_id, response)
+                    await Messages.create_message(channel_id, response["output"])
                 except Exception as e:
                     await Messages.create_message(channel_id, f":x: Something went wrong. Please try again later.")
                     print(e)

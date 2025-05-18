@@ -73,4 +73,4 @@ class Agent:
         )
 
     async def respond(self, prompt: str):
-        return await self.agent.arun(prompt)
+        return await self.agent.ainvoke(prompt)
