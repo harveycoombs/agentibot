@@ -47,3 +47,11 @@ async def delete_message(channel_id, event_data):
         
     await Messages.delete_message(channel_id, referenced_message_id)
     return ":white_check_mark: I have deleted the referenced message."
+
+async def ban_member(member_id, guild_id):
+    await Members.ban_member(guild_id, member_id)
+    return f":white_check_mark: I have banned <@{member_id}>."
+
+async def unban_member(member_id, guild_id):
+    await Members.unban_member(guild_id, member_id)
+    return f":white_check_mark: I have unbanned <@{member_id}>."
