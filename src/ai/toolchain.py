@@ -55,3 +55,7 @@ async def ban_member(member_id, guild_id):
 async def unban_member(member_id, guild_id):
     await Members.unban_member(guild_id, member_id)
     return f":white_check_mark: I have unbanned <@{member_id}>."
+
+async def kick_member(member_id, guild_id):
+    await Members.remove_member(guild_id, member_id)
+    return f":white_check_mark: I have kicked <@{member_id}>."
