@@ -43,7 +43,7 @@ class Events:
         
                 await Messages.create_message(system_channel_id, None, [{
                     "title": ":wave: Thank you for inviting me to your server!",
-                    "description": "Use the `/help` command to get started.",
+                    "description": "Check out the [Documentation](https://harvey-coombs-1.gitbook.io/vesper) to get started.",
                     "color": Messages.embed_color
                 }], [{
                     "type": 1,
