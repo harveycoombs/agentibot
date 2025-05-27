@@ -73,7 +73,7 @@ class Agent:
 
         self.agent = initialize_agent(
             tools=self.tools,
-            llm=ChatOllama(model="gemma3:12b"),
+            llm=ChatOllama(model="qwen3:14b"),
             agent_type=AgentType.ZERO_SHOT_REACT_DESCRIPTION,
             verbose=False
         )
