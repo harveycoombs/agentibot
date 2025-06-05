@@ -46,25 +46,26 @@ class Events:
                     return
                 
             case "GUILD_CREATE":
-                system_channel_id = event_data["system_channel_id"]
                 guild_id = event_data["id"]
 
                 if not guild_is_registered(guild_id):
                     register_guild(guild_id)
 
-                await Messages.create_message(system_channel_id, None, [{
-                    "title": ":wave: Thank you for inviting me to your server!",
-                    "description": "Check out the [Documentation](https://harvey-coombs-1.gitbook.io/vesper) to get started.",
-                    "color": Messages.embed_color
-                }], [{
-                    "type": 1,
-                    "components": [
-                        {
-                            "type": 2,
-                            "label": "Website",
-                            "style": 5,
-                            "url": "https://vesper.gg"
-                        }
-                    ]
-                }])
-                return
+                    system_channel_id = event_data["system_channel_id"]
+
+                    await Messages.create_message(system_channel_id, None, [{
+                        "title": ":wave: Thank you for inviting me to your server!",
+                        "description": "Check out the [Documentation](https://harvey-coombs-1.gitbook.io/vesper) to get started.",
+                        "color": Messages.embed_color
+                    }], [{
+                        "type": 1,
+                        "components": [
+                            {
+                                "type": 2,
+                                "label": "Website",
+                                "style": 5,
+                                "url": "https://vesper.gg"
+                            }
+                        ]
+                    }])
+                    return

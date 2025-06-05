@@ -2,7 +2,7 @@ from langchain_ollama import ChatOllama
 from langchain.agents import initialize_agent, Tool
 from langchain.agents.agent_types import AgentType
 
-from ai.toolchain import add_role, remove_role, change_nickname, create_text_channel, create_voice_channel, delete_channel, delete_message, ban_member, unban_member, kick_member
+from ai.toolchain import add_role, remove_role, change_nickname, create_text_channel, create_voice_channel, delete_channel, delete_message, ban_member, unban_member, kick_member, bulk_delete_messages
 
 class Agent:
     def __init__(self, context: dict):
@@ -50,6 +50,12 @@ class Agent:
                 func=None,
                 coroutine=lambda x: delete_message(x),
                 description="Deletes a message. Input should be a string with the message's content."
+            ),
+            Tool(
+                name="bulk_delete_messages",
+                func=None,
+                coroutine=lambda x: bulk_delete_messages(x, self.context["channel_id"]),
+                description="Bulk deletes messages in the current channel. Input should be a number with the amount of messages to delete."
             ),
             Tool(
                 name="ban_member",
