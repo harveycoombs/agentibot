@@ -1,6 +1,6 @@
 import json
 
-from utils import update_guild_counter
+from data import update_guild_counter, update_guild_interaction_count, check_guild_interaction_limit_hit, register_guild, guild_is_registered
 from discord.messages import Messages
 from ai.agent import Agent
 
@@ -28,6 +28,13 @@ class Events:
                 if author_id == CONFIG["application_id"] or CONFIG["application_id"] not in [mention["id"] for mention in event_data["mentions"]]:
                     return
 
+                guild_id = event_data["guild_id"]
+
+                if check_guild_interaction_limit_hit(guild_id):
+                    return
+
+                update_guild_interaction_count(guild_id)
+
                 try:
                     agent = Agent(context=event_data)
                     response = await agent.respond(event_data["content"].replace(f"<@!{CONFIG['application_id']}>", ""))
@@ -40,7 +47,11 @@ class Events:
                 
             case "GUILD_CREATE":
                 system_channel_id = event_data["system_channel_id"]
-        
+                guild_id = event_data["id"]
+
+                if not guild_is_registered(guild_id):
+                    register_guild(guild_id)
+
                 await Messages.create_message(system_channel_id, None, [{
                     "title": ":wave: Thank you for inviting me to your server!",
                     "description": "Check out the [Documentation](https://harvey-coombs-1.gitbook.io/vesper) to get started.",
