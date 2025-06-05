@@ -24,7 +24,7 @@ class Gateway:
             "status": "online",
             'activities': [
                 {
-                    "name": "@Vesper",
+                    "name": "mentions",
                     "type": 2
                 }
             ],
