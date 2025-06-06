@@ -34,6 +34,7 @@ class Events:
                 guild_id = event_data["guild_id"]
 
                 if check_guild_interaction_limit_hit(guild_id):
+                    await Messages.create_message(channel_id, f":warning: You've reached your monthly interaction limit. [Click here](https://vesper.gg/premium) to learn more.")
                     return
 
                 update_guild_interaction_count(guild_id)
