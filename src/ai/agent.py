@@ -48,7 +48,7 @@ class Agent:
             Tool(
                 name="delete_message",
                 func=None,
-                coroutine=lambda x: delete_message(x),
+                coroutine=lambda _: delete_message(self.context["channel_id"], self.context["message_reference"]),
                 description="Deletes a message. Input should be a string with the message's content."
             ),
             Tool(

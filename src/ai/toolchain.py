@@ -39,9 +39,9 @@ async def delete_channel(target_channel_id):
     await Channels.delete_channel(target_channel_id)
     return f":white_check_mark: I have deleted the <#{target_channel_id}> channel."
 
-async def delete_message(channel_id, event_data):
-    referenced_message_id = event_data["referenced_message"]["id"] if "referenced_message" in event_data else None
-    
+async def delete_message(channel_id, referenced_message):
+    referenced_message_id = referenced_message and referenced_message["message_id"]
+
     if referenced_message_id is None:
         return ":warning: No message to delete."
         
