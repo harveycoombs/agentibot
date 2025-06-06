@@ -30,13 +30,13 @@ class Agent:
             Tool(
                 name="create_text_channel",
                 func=None,
-                coroutine=lambda x: create_text_channel(x, self.context["guild_id"]),
+                coroutine=lambda x: create_text_channel(x, self.context["guild_id"], self.context["author"]["id"]),
                 description="Creates a text channel. Input should be a string with the channel's name."
             ),
             Tool(
                 name="create_voice_channel",
                 func=None,
-                coroutine=lambda x: create_voice_channel(x, self.context["guild_id"]),
+                coroutine=lambda x: create_voice_channel(x, self.context["guild_id"], self.context["author"]["id"]),
                 description="Creates a voice channel. Input should be a string with the channel's name."
             ),
             Tool(
@@ -81,7 +81,8 @@ class Agent:
             tools=self.tools,
             llm=ChatOllama(model="qwen3:14b"),
             agent_type=AgentType.ZERO_SHOT_REACT_DESCRIPTION,
-            verbose=False
+            verbose=False,
+            handle_parsing_errors=True
         )
 
     async def respond(self, prompt: str):

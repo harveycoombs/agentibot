@@ -2,7 +2,9 @@ from discord.roles import Roles
 from discord.members import Members
 from discord.channels import Channels
 from discord.messages import Messages
-
+from discord.permissions import Permissions
+from discord.guilds import Guilds
+ 
 async def add_role(role_name, guild_id, author_id):
     roles = await Roles.get_roles(guild_id)
     role = next((role for role in roles if role["name"].lower() == role_name.lower()), None)
@@ -27,11 +29,35 @@ async def change_nickname(nickname, guild_id, author_id):
     await Members.update_member(guild_id, author_id, nickname)
     return f":white_check_mark: I have changed your nickname to '{nickname}'."
 
-async def create_text_channel(channel_name, guild_id):
+async def create_text_channel(channel_name, guild_id, author_id):
+    member = await Members.get_member(guild_id, author_id)
+    roles = await Roles.get_roles(guild_id)
+    guild = await Guilds.get_guild(guild_id)
+
+    member_roles = [role for role in roles if role["id"] in member["roles"]]
+
+    for role in member_roles:
+        if Permissions.has_permission(role["permissions_new"], Permissions.MANAGE_CHANNELS) or guild["owner_id"] == author_id:
+            break
+        else:
+            raise Exception(":warning: You do not have permission to create channels.")
+
     new_channel_id = await Channels.create_channel(guild_id, channel_name)
     return f":white_check_mark: I have created the <#{new_channel_id}> channel."
 
-async def create_voice_channel(channel_name, guild_id):
+async def create_voice_channel(channel_name, guild_id, author_id):
+    member = await Members.get_member(guild_id, author_id)
+    roles = await Roles.get_roles(guild_id)
+    guild = await Guilds.get_guild(guild_id)
+
+    member_roles = [role for role in roles if role["id"] in member["roles"]]
+
+    for role in member_roles:
+        if Permissions.has_permission(role["permissions_new"], Permissions.MANAGE_CHANNELS) or guild["owner_id"] == author_id:
+            break
+        else:
+            raise Exception(":warning: You do not have permission to create channels.")
+        
     new_channel_id = await Channels.create_channel(guild_id, channel_name, 2)
     return f":white_check_mark: I have created the <#{new_channel_id}> channel."
 
@@ -42,7 +68,7 @@ async def delete_channel(target_channel_id):
 async def delete_message(channel_id, referenced_message):
     referenced_message_id = referenced_message and referenced_message["message_id"]
 
-    if referenced_message_id is None:   
+    if referenced_message_id is None:
         raise Exception(":warning: There is no message to delete.")
         
     await Messages.delete_message(channel_id, referenced_message_id)

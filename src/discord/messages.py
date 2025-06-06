@@ -1,4 +1,5 @@
 import json
+import asyncio
 
 from discord.api import DiscordAPI
 
@@ -51,6 +52,7 @@ class Messages:
 
             for x in range(int(amount) + 1):
                 await DiscordAPI.delete(f"channels/{channel_id}/messages/{messages[x]['id']}")
+                await asyncio.sleep(0.75)
         except Exception:
             raise Exception(":bangbang: Unable to bulk delete messages.")
 
