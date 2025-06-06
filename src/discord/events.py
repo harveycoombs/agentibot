@@ -18,7 +18,7 @@ class Events:
             case "READY":
                 guild_count = len(event_data["guilds"])
                 
-                if CONFIG["application_id"] == "1028726248861605999":
+                if CONFIG["application_id"] != "1365463510934360135":
                     update_guild_counter(guild_count)
 
                 print(f"Discord Gateway: Ready in {guild_count} guilds")
@@ -33,11 +33,12 @@ class Events:
 
                 guild_id = event_data["guild_id"]
 
-                if check_guild_interaction_limit_hit(guild_id):
-                    await Messages.create_message(channel_id, f":warning: You've reached your monthly interaction limit. [Click here](https://vesper.gg/premium) to learn more.")
-                    return
+                if CONFIG["application_id"] != "1365463510934360135":
+                    if check_guild_interaction_limit_hit(guild_id):
+                        await Messages.create_message(channel_id, f":warning: You've reached your monthly interaction limit. [Click here](https://vesper.gg/premium) to learn more.")
+                        return
 
-                update_guild_interaction_count(guild_id)
+                    update_guild_interaction_count(guild_id)
 
                 try:
                     agent = Agent(context=event_data)
