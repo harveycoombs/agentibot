@@ -48,7 +48,6 @@ class Gateway:
             except Exception as ex:
                 print(f"Discord gateway raised an exception: {ex}")
 
-    
     @staticmethod
     async def connect():
         url = await Gateway.get_gateway_url()
@@ -61,7 +60,6 @@ class Gateway:
             asyncio.create_task(Gateway.keep_alive(socket, heartbeat_interval))
 
             await socket.send(json.dumps(Gateway.identity))
-
             await socket.send(json.dumps(Gateway.presence))
 
             async for message in socket:
