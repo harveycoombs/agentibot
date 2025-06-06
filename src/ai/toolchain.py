@@ -8,7 +8,7 @@ async def add_role(role_name, guild_id, author_id):
     role = next((role for role in roles if role["name"].lower() == role_name.lower()), None)
 
     if role is None:
-        return ":warning: Sorry, I couldn't find that role."
+        raise Exception(":warning: The provided role does not exist.")
     
     await Roles.add_role_to_user(guild_id, author_id, role["id"])
     return ":white_check_mark: I have added that role to you."
@@ -18,7 +18,7 @@ async def remove_role(role_name, guild_id, author_id):
     role = next((role for role in roles if role["name"].lower() == role_name.lower()), None)
 
     if role is None:
-        return f":warning: Sorry, I couldn't find the '{role_name}' role."
+        raise Exception(f":warning: The provided role does not exist.")
     
     await Roles.remove_role_from_user(guild_id, author_id, role["id"])
     return f":white_check_mark: I have removed the '{role_name}' role from you."
@@ -42,8 +42,8 @@ async def delete_channel(target_channel_id):
 async def delete_message(channel_id, referenced_message):
     referenced_message_id = referenced_message and referenced_message["message_id"]
 
-    if referenced_message_id is None:
-        return ":warning: No message to delete."
+    if referenced_message_id is None:   
+        raise Exception(":warning: There is no message to delete.")
         
     await Messages.delete_message(channel_id, referenced_message_id)
     return ":white_check_mark: I have deleted the referenced message."

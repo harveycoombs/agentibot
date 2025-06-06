@@ -17,10 +17,13 @@ class Events:
         match event_type:
             case "READY":
                 guild_count = len(event_data["guilds"])
-                update_guild_counter(guild_count)
+                
+                if CONFIG["application_id"] == "1028726248861605999":
+                    update_guild_counter(guild_count)
 
                 print(f"Discord Gateway: Ready in {guild_count} guilds")
                 return
+
             case "MESSAGE_CREATE":
                 author_id = event_data["author"]["id"]
                 channel_id = event_data["channel_id"]
@@ -41,8 +44,7 @@ class Events:
 
                     await Messages.create_message(channel_id, response["output"])
                 except Exception as e:
-                    await Messages.create_message(channel_id, f":x: Something went wrong. Please try again later.")
-                    print(e)
+                    await Messages.create_message(channel_id, f"{e}")
                     return
                 
             case "GUILD_CREATE":
