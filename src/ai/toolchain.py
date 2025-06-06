@@ -40,7 +40,7 @@ async def create_text_channel(channel_name, guild_id, author_id):
         if Permissions.has_permission(role["permissions_new"], Permissions.MANAGE_CHANNELS) or guild["owner_id"] == author_id:
             break
         else:
-            raise Exception(":warning: You do not have permission to create channels.")
+            raise Exception(":no_entry_sign: You do not have permission to create channels.")
 
     new_channel_id = await Channels.create_channel(guild_id, channel_name)
     return f":white_check_mark: I have created the <#{new_channel_id}> channel."
@@ -56,25 +56,61 @@ async def create_voice_channel(channel_name, guild_id, author_id):
         if Permissions.has_permission(role["permissions_new"], Permissions.MANAGE_CHANNELS) or guild["owner_id"] == author_id:
             break
         else:
-            raise Exception(":warning: You do not have permission to create channels.")
+            raise Exception(":no_entry_sign: You do not have permission to create channels.")
         
     new_channel_id = await Channels.create_channel(guild_id, channel_name, 2)
     return f":white_check_mark: I have created the <#{new_channel_id}> channel."
 
-async def delete_channel(target_channel_id):
+async def delete_channel(target_channel_id, guild_id, author_id):
+    member = await Members.get_member(guild_id, author_id)
+    roles = await Roles.get_roles(guild_id)
+    guild = await Guilds.get_guild(guild_id)
+
+    member_roles = [role for role in roles if role["id"] in member["roles"]]
+
+    for role in member_roles:
+        if Permissions.has_permission(role["permissions_new"], Permissions.MANAGE_CHANNELS) or guild["owner_id"] == author_id:
+            break
+        else:
+            raise Exception(":no_entry_sign: You do not have permission to delete channels.")
+        
     await Channels.delete_channel(target_channel_id)
     return f":white_check_mark: I have deleted the <#{target_channel_id}> channel."
 
-async def delete_message(channel_id, referenced_message):
+async def delete_message(channel_id, referenced_message, guild_id, author_id):
     referenced_message_id = referenced_message and referenced_message["message_id"]
 
     if referenced_message_id is None:
         raise Exception(":warning: There is no message to delete.")
         
+    member = await Members.get_member(guild_id, author_id)
+    roles = await Roles.get_roles(guild_id)
+    guild = await Guilds.get_guild(guild_id)
+
+    member_roles = [role for role in roles if role["id"] in member["roles"]]
+
+    for role in member_roles:
+        if Permissions.has_permission(role["permissions_new"], Permissions.MANAGE_MESSAGES) or guild["owner_id"] == author_id:
+            break
+        else:
+            raise Exception(":no_entry_sign: You do not have permission to delete messages.")
+        
     await Messages.delete_message(channel_id, referenced_message_id)
     return ":white_check_mark: I have deleted the referenced message."
 
-async def bulk_delete_messages(amount, channel_id):
+async def bulk_delete_messages(amount, channel_id, guild_id, author_id):
+    member = await Members.get_member(guild_id, author_id)
+    roles = await Roles.get_roles(guild_id)
+    guild = await Guilds.get_guild(guild_id)
+
+    member_roles = [role for role in roles if role["id"] in member["roles"]]
+
+    for role in member_roles:
+        if Permissions.has_permission(role["permissions_new"], Permissions.MANAGE_MESSAGES) or guild["owner_id"] == author_id:
+            break
+        else:
+            raise Exception(":no_entry_sign: You do not have permission to delete messages.")
+        
     await Messages.bulk_delete_messages(channel_id, amount)
     return f":white_check_mark: I have deleted {amount} messages."
 

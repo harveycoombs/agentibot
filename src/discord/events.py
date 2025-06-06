@@ -1,4 +1,5 @@
 import json
+import torch
 
 from data import update_guild_counter, update_guild_interaction_count, check_guild_interaction_limit_hit, register_guild, guild_is_registered
 from discord.messages import Messages
@@ -21,7 +22,7 @@ class Events:
                 if CONFIG["application_id"] != "1365463510934360135":
                     update_guild_counter(guild_count)
 
-                print(f"Discord Gateway: Ready in {guild_count} guilds")
+                print(f"Discord Gateway: Ready in {guild_count} guilds\nCUDA Available: {'Yes' if torch.cuda.is_available() else 'No'}\nCuDNN Available: {'Yes' if torch.backends.cudnn.enabled else 'No'}")
                 return
 
             case "MESSAGE_CREATE":

@@ -42,19 +42,19 @@ class Agent:
             Tool(
                 name="delete_channel",
                 func=None,
-                coroutine=lambda x: delete_channel(x, self.context["channel_id"]),
+                coroutine=lambda x: delete_channel(x, self.context["guild_id"], self.context["author"]["id"]),
                 description="Deletes the current channel."
             ),
             Tool(
                 name="delete_message",
                 func=None,
-                coroutine=lambda _: delete_message(self.context["channel_id"], self.context["message_reference"]),
+                coroutine=lambda _: delete_message(self.context["channel_id"], self.context["message_reference"], self.context["guild_id"], self.context["author"]["id"]),
                 description="Deletes a message. Input should be a string with the message's content."
             ),
             Tool(
                 name="bulk_delete_messages",
                 func=None,
-                coroutine=lambda x: bulk_delete_messages(x, self.context["channel_id"]),
+                coroutine=lambda x: bulk_delete_messages(x, self.context["channel_id"], self.context["guild_id"], self.context["author"]["id"]),
                 description="Bulk deletes messages in the current channel. Input should be a number with the amount of messages to delete."
             ),
             Tool(
