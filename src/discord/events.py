@@ -22,7 +22,7 @@ class Events:
                 if CONFIG["application_id"] != "1365463510934360135":
                     update_guild_counter(guild_count)
 
-                print(f"Discord Gateway: Ready in {guild_count} guilds\nCUDA Available: {'Yes' if torch.cuda.is_available() else 'No'}\nCuDNN Available: {'Yes' if torch.backends.cudnn.enabled else 'No'}")
+                print(f"Discord Gateway: Ready in {guild_count} guilds\n\nCUDA Version: {torch.version.cuda}\nCUDA Available: {'Yes' if torch.cuda.is_available() else 'No'}\nCuDNN Available: {'Yes' if torch.backends.cudnn.enabled else 'No'}\nDevices: {torch.cuda.device_count()}")
                 return
 
             case "MESSAGE_CREATE":
