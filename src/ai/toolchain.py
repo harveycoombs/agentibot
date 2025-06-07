@@ -132,14 +132,56 @@ async def bulk_delete_messages(amount, channel_id, guild_id, author_id):
     await Messages.bulk_delete_messages(channel_id, amount)
     return f":white_check_mark: I have deleted {amount} messages."
 
-async def ban_member(member_id, guild_id):
+async def ban_member(member_id, guild_id, author_id):
+    member = await Members.get_member(guild_id, author_id)
+    roles = await Roles.get_roles(guild_id)
+    guild = await Guilds.get_guild(guild_id)
+
+    member_roles = [role for role in roles if role["id"] in member["roles"]]
+
+    if len(member_roles) == 0 and guild["owner_id"] != author_id:
+        raise Exception(":no_entry_sign: You do not have permission to ban members.")
+
+    for role in member_roles:
+        if Permissions.has_permission(role["permissions_new"], Permissions.BAN_MEMBERS) or guild["owner_id"] == author_id:
+            break
+        else:
+            raise Exception(":no_entry_sign: You do not have permission to ban members.")
+        
     await Members.ban_member(guild_id, member_id)
     return f":white_check_mark: I have banned <@{member_id}>."
 
-async def unban_member(member_id, guild_id):
+async def unban_member(member_id, guild_id, author_id):
+    member = await Members.get_member(guild_id, author_id)
+    roles = await Roles.get_roles(guild_id)
+    guild = await Guilds.get_guild(guild_id)
+
+    member_roles = [role for role in roles if role["id"] in member["roles"]]
+
+    if len(member_roles) == 0 and guild["owner_id"] != author_id:
+        raise Exception(":no_entry_sign: You do not have permission to unban members.")
+
+    for role in member_roles:
+        if Permissions.has_permission(role["permissions_new"], Permissions.BAN_MEMBERS) or guild["owner_id"] == author_id:
+            break
     await Members.unban_member(guild_id, member_id)
     return f":white_check_mark: I have unbanned <@{member_id}>."
 
-async def kick_member(member_id, guild_id):
+async def kick_member(member_id, guild_id, author_id):
+    member = await Members.get_member(guild_id, author_id)
+    roles = await Roles.get_roles(guild_id)
+    guild = await Guilds.get_guild(guild_id)
+
+    member_roles = [role for role in roles if role["id"] in member["roles"]]
+
+    if len(member_roles) == 0 and guild["owner_id"] != author_id:
+        raise Exception(":no_entry_sign: You do not have permission to kick members.")
+
+    for role in member_roles:
+        if Permissions.has_permission(role["permissions_new"], Permissions.KICK_MEMBERS) or guild["owner_id"] == author_id:
+            break
+        else:
+            raise Exception(":no_entry_sign: You do not have permission to kick members.")
+        
     await Members.remove_member(guild_id, member_id)
     return f":white_check_mark: I have kicked <@{member_id}>."
