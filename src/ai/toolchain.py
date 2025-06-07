@@ -5,6 +5,9 @@ from discord.messages import Messages
 from discord.permissions import Permissions
 from discord.guilds import Guilds
  
+def get_bot_creator():
+    return "[Harvey Coombs](https://harveycoombs.com)"
+
 async def add_role(role_name, guild_id, author_id):
     roles = await Roles.get_roles(guild_id)
     role = next((role for role in roles if role["name"].lower() == role_name.lower()), None)
