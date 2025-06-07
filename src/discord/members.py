@@ -34,9 +34,11 @@ class Members:
             raise Exception(":bangbang: Unable to remove member.")
 
     @staticmethod
-    async def ban_member(guild_id, user_id):
+    async def ban_member(guild_id, user_id, reason):
         try:
-            await DiscordAPI.post(f"guilds/{guild_id}/bans/{user_id}")
+            await DiscordAPI.post(f"guilds/{guild_id}/bans/{user_id}", {
+                "reason": reason
+            })
         except Exception:
             raise Exception(":bangbang: Unable to ban member.")
 

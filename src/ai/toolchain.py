@@ -132,7 +132,7 @@ async def bulk_delete_messages(amount, channel_id, guild_id, author_id):
     await Messages.bulk_delete_messages(channel_id, amount)
     return f":white_check_mark: I have deleted {amount} messages."
 
-async def ban_member(member_id, guild_id, author_id):
+async def ban_member(member_id, reason, guild_id, author_id):
     member = await Members.get_member(guild_id, author_id)
     roles = await Roles.get_roles(guild_id)
     guild = await Guilds.get_guild(guild_id)
@@ -148,7 +148,7 @@ async def ban_member(member_id, guild_id, author_id):
         else:
             raise Exception(":no_entry_sign: You do not have permission to ban members.")
         
-    await Members.ban_member(guild_id, member_id)
+    await Members.ban_member(guild_id, member_id, reason)
     return f":white_check_mark: I have banned <@{member_id}>."
 
 async def unban_member(member_id, guild_id, author_id):
