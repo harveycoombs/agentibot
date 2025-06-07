@@ -39,6 +39,9 @@ async def create_text_channel(channel_name, guild_id, author_id):
 
     member_roles = [role for role in roles if role["id"] in member["roles"]]
 
+    if len(member_roles) == 0 and guild["owner_id"] != author_id:
+        raise Exception(":no_entry_sign: You do not have permission to create channels.")
+
     for role in member_roles:
         if Permissions.has_permission(role["permissions_new"], Permissions.MANAGE_CHANNELS) or guild["owner_id"] == author_id:
             break
@@ -55,6 +58,9 @@ async def create_voice_channel(channel_name, guild_id, author_id):
 
     member_roles = [role for role in roles if role["id"] in member["roles"]]
 
+    if len(member_roles) == 0 and guild["owner_id"] != author_id:
+        raise Exception(":no_entry_sign: You do not have permission to create channels.")
+
     for role in member_roles:
         if Permissions.has_permission(role["permissions_new"], Permissions.MANAGE_CHANNELS) or guild["owner_id"] == author_id:
             break
@@ -70,6 +76,9 @@ async def delete_channel(target_channel_id, guild_id, author_id):
     guild = await Guilds.get_guild(guild_id)
 
     member_roles = [role for role in roles if role["id"] in member["roles"]]
+
+    if len(member_roles) == 0 and guild["owner_id"] != author_id:
+        raise Exception(":no_entry_sign: You do not have permission to create channels.")
 
     for role in member_roles:
         if Permissions.has_permission(role["permissions_new"], Permissions.MANAGE_CHANNELS) or guild["owner_id"] == author_id:
@@ -92,6 +101,9 @@ async def delete_message(channel_id, referenced_message, guild_id, author_id):
 
     member_roles = [role for role in roles if role["id"] in member["roles"]]
 
+    if len(member_roles) == 0 and guild["owner_id"] != author_id:
+        raise Exception(":no_entry_sign: You do not have permission to create channels.")
+
     for role in member_roles:
         if Permissions.has_permission(role["permissions_new"], Permissions.MANAGE_MESSAGES) or guild["owner_id"] == author_id:
             break
@@ -107,6 +119,9 @@ async def bulk_delete_messages(amount, channel_id, guild_id, author_id):
     guild = await Guilds.get_guild(guild_id)
 
     member_roles = [role for role in roles if role["id"] in member["roles"]]
+
+    if len(member_roles) == 0 and guild["owner_id"] != author_id:
+        raise Exception(":no_entry_sign: You do not have permission to create channels.")
 
     for role in member_roles:
         if Permissions.has_permission(role["permissions_new"], Permissions.MANAGE_MESSAGES) or guild["owner_id"] == author_id:
