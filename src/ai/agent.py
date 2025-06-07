@@ -65,19 +65,19 @@ class Agent:
             Tool(
                 name="ban_member",
                 func=None,
-                coroutine=lambda x: ban_member(x, self.context["guild_id"], self.context["mentions"][0]["id"]),
+                coroutine=lambda x: ban_member(x, self.context["guild_id"], self.context["mentions"][1]["id"],),
                 description="Bans a member. Input should be a string with the member's ID."
             ),
             Tool(
                 name="unban_member",
                 func=None,
-                coroutine=lambda x: unban_member(x, self.context["guild_id"], self.context["mentions"][0]["id"]),
+                coroutine=lambda x: unban_member(x, self.context["guild_id"], self.context["mentions"][1]["id"], self.context["author"]["id"]),
                 description="Unbans a member. Input should be a string with the member's ID."
             ),
             Tool(
                 name="kick_member",
                 func=None,
-                coroutine=lambda x: kick_member(x, self.context["guild_id"], self.context["mentions"][0]["id"]),
+                coroutine=lambda _: kick_member(self.context["mentions"][1]["id"], self.context["guild_id"], self.context["author"]["id"]),
                 description="Kicks a member. Input should be a string with the member's ID."
             )
         ]
