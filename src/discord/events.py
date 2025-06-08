@@ -1,7 +1,7 @@
 import json
 import torch
 
-from data import update_guild_counter, update_guild_interaction_count, check_guild_interaction_limit_hit, register_guild, guild_is_registered
+from data import update_guild_counter, update_guild_interaction_count, check_guild_interaction_limit_hit, register_guild, guild_is_registered, get_guild_count
 from discord.messages import Messages
 from ai.agent import Agent
 
@@ -55,6 +55,8 @@ class Events:
 
                 if not guild_is_registered(guild_id):
                     register_guild(guild_id)
+
+                    update_guild_counter(get_guild_count() + 1)
 
                     system_channel_id = event_data["system_channel_id"]
 
