@@ -89,6 +89,24 @@ async def delete_channel(target_channel_id, guild_id, author_id):
     await Channels.delete_channel(target_channel_id)
     return f":white_check_mark: I have deleted the <#{target_channel_id}> channel."
 
+async def rename_channel(guild_id, channel_id, new_name, author_id):
+    member = await Members.get_member(guild_id, author_id)
+    roles = await Roles.get_roles(guild_id)
+    guild = await Guilds.get_guild(guild_id)
+
+    member_roles = [role for role in roles if role["id"] in member["roles"]]
+
+    if len(member_roles) == 0 and guild["owner_id"] != author_id:
+        raise Exception(":no_entry_sign: You do not have permission to rename channels.")
+
+    for role in member_roles:
+        if Permissions.has_permission(role["permissions_new"], Permissions.MANAGE_CHANNELS) or guild["owner_id"] == author_id:
+            break
+        else:
+            raise Exception(":no_entry_sign: You do not have permission to rename channels.")
+
+    await Channels.rename_channel(channel_id, new_name)
+
 async def delete_message(channel_id, referenced_message, guild_id, author_id):
     referenced_message_id = referenced_message and referenced_message["message_id"]
 

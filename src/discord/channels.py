@@ -20,6 +20,15 @@ class Channels:
             return response["id"]
         except Exception:
             raise Exception(":bangbang: Unable to create channel.")
+        
+    @staticmethod
+    async def rename_channel(channel_id, new_name):
+        try:
+            await DiscordAPI.patch(f"channels/{channel_id}", {
+                "name": new_name
+            })
+        except Exception:
+            raise Exception(":bangbang: Unable to rename channel.")
 
     @staticmethod
     async def delete_channel(channel_id):
