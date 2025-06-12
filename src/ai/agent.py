@@ -2,7 +2,7 @@ from langchain_ollama import ChatOllama
 from langchain.agents import initialize_agent, Tool
 from langchain.agents.agent_types import AgentType
 
-from ai.toolchain import get_bot_creator, add_role, remove_role, change_nickname, create_text_channel, create_voice_channel, delete_channel, delete_message, ban_member, unban_member, kick_member, bulk_delete_messages
+from ai.toolchain import get_bot_creator, add_role, remove_role, create_role, change_nickname, create_text_channel, create_voice_channel, delete_channel, delete_message, ban_member, unban_member, kick_member, bulk_delete_messages
 
 class Agent:
     def __init__(self, context: dict):
@@ -25,6 +25,12 @@ class Agent:
                 func=None,
                 coroutine=lambda x: remove_role(x, self.context["guild_id"], self.context["author"]["id"]),
                 description="Removes a role from a user. Input should be a string with the role's name."
+            ),
+            Tool(
+                name="create_role",
+                func=None,
+                coroutine=lambda x: create_role(x.split(" ")[0], x.split(" ")[1], self.context["guild_id"], self.context["author"]["id"]),
+                description="Creates a role. Input should be a string with the role's name and a string with the role's hex color."
             ),
             Tool(
                 name="change_nickname",

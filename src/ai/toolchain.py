@@ -28,6 +28,28 @@ async def remove_role(role_name, guild_id, author_id):
     await Roles.remove_role_from_user(guild_id, author_id, role["id"])
     return f":white_check_mark: I have removed the '{role_name}' role from you."
 
+async def create_role(role_name, role_color, guild_id, author_id):
+    color_hex = role_color.replace("#", "").replace("\"", "").strip()
+    safe_role_name = role_name.strip("\"").strip()
+
+    member = await Members.get_member(guild_id, author_id)
+    roles = await Roles.get_roles(guild_id)
+    guild = await Guilds.get_guild(guild_id)
+
+    member_roles = [role for role in roles if role["id"] in member["roles"]]
+
+    if len(member_roles) == 0 and guild["owner_id"] != author_id:
+        raise Exception(":no_entry_sign: You do not have permission to create roles.")
+
+    for role in member_roles:
+        if Permissions.has_permission(role["permissions_new"], Permissions.MANAGE_ROLES) or guild["owner_id"] == author_id:
+            break
+        else:
+            raise Exception(":no_entry_sign: You do not have permission to create roles.")
+
+    await Roles.create_role(guild_id, safe_role_name, int(color_hex, 16))
+    return f":white_check_mark: I have created the '{safe_role_name}' role."
+
 async def change_nickname(nickname, guild_id, author_id):
     await Members.update_member(guild_id, author_id, nickname)
     return f":white_check_mark: I have changed your nickname to '{nickname}'."

@@ -18,7 +18,7 @@ class Roles:
             raise Exception(":bangbang: Unable to retrieve role.")
     
     @staticmethod
-    async def create_role(guild_id, name, color=0, hoist=False, mentionable=False, permissions=[]):
+    async def create_role(guild_id, name, color=0, hoist=False, mentionable=False, permissions=0):
         try:
             await DiscordAPI.post(f"guilds/{guild_id}/roles", {
             "name": name,
