@@ -18,7 +18,13 @@ class Agent:
                 name="add_role",
                 func=None,
                 coroutine=lambda x: add_role(x, self.context["guild_id"], self.context["author"]["id"]),
-                description="Adds a role to a user. Input should be a string with the role's name."
+                description="Adds a role to the user who is using the command. Input should be a string with the role's name."
+            ),
+            Tool(
+                name="add_role_to_user",
+                func=None,
+                coroutine=lambda x: add_role(x, self.context["guild_id"], self.context["author"]["id"], self.context["mentions"][1]["id"]),
+                description="Adds a role to another user. Input should be a string with the role's name."
             ),
             Tool(
                 name="remove_role",

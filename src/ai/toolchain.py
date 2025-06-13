@@ -8,14 +8,14 @@ from discord.guilds import Guilds
 def get_bot_creator():
     return "[Harvey Coombs](https://harveycoombs.com)"
 
-async def add_role(role_name, guild_id, author_id):
+async def add_role(role_name, guild_id, author_id, target_id=None):
     roles = await Roles.get_roles(guild_id)
     role = next((role for role in roles if role["name"].lower() == role_name.lower()), None)
 
     if role is None:
         raise Exception(":warning: The provided role does not exist.")
     
-    await Roles.add_role_to_user(guild_id, author_id, role["id"])
+    await Roles.add_role_to_user(guild_id, author_id if target_id is None else target_id, role["id"])
     return ":white_check_mark: I have added that role to you."
 
 async def remove_role(role_name, guild_id, author_id):
