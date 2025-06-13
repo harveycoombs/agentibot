@@ -6,7 +6,8 @@ class Members:
         try:
             members = await DiscordAPI.get(f"guilds/{guild_id}/members")
             return members
-        except Exception:
+        except Exception as ex:
+            print(ex)
             raise Exception(":bangbang: Unable to retrieve members.")
         
     @staticmethod
@@ -14,7 +15,8 @@ class Members:
         try:
             member = await DiscordAPI.get(f"guilds/{guild_id}/members/{user_id}")
             return member
-        except Exception:
+        except Exception as ex:
+            print(ex)
             raise Exception(":bangbang: Unable to retrieve member.")
     
     @staticmethod
@@ -23,28 +25,32 @@ class Members:
             await DiscordAPI.patch(f"guilds/{guild_id}/members/{user_id}", {
                 "nick": nickname
             })
-        except Exception:
+        except Exception as ex:
+            print(ex)
             raise Exception(":bangbang: Unable to update member.")
     
     @staticmethod
     async def remove_member(guild_id, user_id):
         try:
             await DiscordAPI.delete(f"guilds/{guild_id}/members/{user_id}")
-        except Exception:
+        except Exception as ex:
+            print(ex)
             raise Exception(":bangbang: Unable to remove member.")
 
     @staticmethod
     async def ban_member(guild_id, user_id, reason):
         try:
-            await DiscordAPI.post(f"guilds/{guild_id}/bans/{user_id}", {
+            await DiscordAPI.put(f"guilds/{guild_id}/bans/{user_id}", {
                 "reason": reason
             })
-        except Exception:
+        except Exception as ex:
+            print(ex)
             raise Exception(":bangbang: Unable to ban member.")
 
     @staticmethod
     async def unban_member(guild_id, user_id):
         try:
             await DiscordAPI.delete(f"guilds/{guild_id}/bans/{user_id}")
-        except Exception:
+        except Exception as ex:
+            print(ex)
             raise Exception(":bangbang: Unable to unban member.")

@@ -71,8 +71,8 @@ class Agent:
             Tool(
                 name="ban_member",
                 func=None,
-                coroutine=lambda x: ban_member(x, self.context["guild_id"], self.context["mentions"][1]["id"],),
-                description="Bans a member. Input should be a string with the member's ID."
+                coroutine=lambda x: ban_member(self.context["mentions"][1]["id"], x, self.context["guild_id"], self.context["author"]["id"]),
+                description="Bans a member. Input should be a string with the reason for the ban."
             ),
             Tool(
                 name="unban_member",
