@@ -16,17 +16,17 @@ async def add_role(role_name, guild_id, author_id, target_id=None):
         raise Exception(":warning: The provided role does not exist.")
     
     await Roles.add_role_to_user(guild_id, author_id if target_id is None else target_id, role["id"])
-    return ":white_check_mark: I have added that role to you."
+    return f":white_check_mark: I have added the '{role_name}' role."
 
-async def remove_role(role_name, guild_id, author_id):
+async def remove_role(role_name, guild_id, author_id, target_id=None):
     roles = await Roles.get_roles(guild_id)
     role = next((role for role in roles if role["name"].lower() == role_name.lower()), None)
 
     if role is None:
         raise Exception(f":warning: The provided role does not exist.")
     
-    await Roles.remove_role_from_user(guild_id, author_id, role["id"])
-    return f":white_check_mark: I have removed the '{role_name}' role from you."
+    await Roles.remove_role_from_user(guild_id, author_id if target_id is None else target_id, role["id"])
+    return f":white_check_mark: I have removed the '{role_name}' role."
 
 async def create_role(role_name, role_color, guild_id, author_id):
     color_hex = role_color.replace("#", "").replace("\"", "").strip()

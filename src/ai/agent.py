@@ -27,6 +27,12 @@ class Agent:
                 description="Adds a role to another user. Input should be a string with the role's name."
             ),
             Tool(
+                name="remove_role_from_user",
+                func=None,
+                coroutine=lambda x: remove_role(x, self.context["guild_id"], self.context["author"]["id"], self.context["mentions"][1]["id"]),
+                description="Removes a role from another user. Input should be a string with the role's name."
+            ),
+            Tool(
                 name="remove_role",
                 func=None,
                 coroutine=lambda x: remove_role(x, self.context["guild_id"], self.context["author"]["id"]),
