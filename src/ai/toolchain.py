@@ -1,3 +1,5 @@
+import json
+
 from discord.roles import Roles
 from discord.members import Members
 from discord.channels import Channels
@@ -7,6 +9,10 @@ from discord.guilds import Guilds
  
 def get_bot_creator():
     return "[Harvey Coombs](https://harveycoombs.com)"
+
+async def get_server_info(guild_id):
+    guild = await Guilds.get_guild(guild_id)
+    return json.dumps(guild)
 
 async def add_role(role_name, guild_id, author_id, target_id=None):
     roles = await Roles.get_roles(guild_id)

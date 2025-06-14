@@ -2,7 +2,7 @@ from langchain_ollama import ChatOllama
 from langchain.agents import initialize_agent, Tool
 from langchain.agents.agent_types import AgentType
 
-from ai.toolchain import get_bot_creator, add_role, remove_role, create_role, change_nickname, create_text_channel, create_voice_channel, delete_channel, delete_message, ban_member, unban_member, kick_member, bulk_delete_messages
+from ai.toolchain import get_bot_creator, get_server_info, add_role, remove_role, create_role, change_nickname, create_text_channel, create_voice_channel, delete_channel, delete_message, ban_member, unban_member, kick_member, bulk_delete_messages
 
 class Agent:
     def __init__(self, context: dict):
@@ -13,6 +13,12 @@ class Agent:
                 name="get_bot_creator",
                 func=lambda _: get_bot_creator(),
                 description="Gets the creator of the bot, which is you."
+            ),
+            Tool(
+                name="get_server_info",
+                func=None,
+                coroutine=lambda _: get_server_info(self.context["guild_id"]),
+                description="Gets information about the current server."
             ),
             Tool(
                 name="add_role",
