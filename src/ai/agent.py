@@ -1,8 +1,19 @@
-from langchain_ollama import ChatOllama
+from langchain_community.llms import LlamaCpp
 from langchain.agents import initialize_agent, Tool
 from langchain.agents.agent_types import AgentType
 
 from ai.toolchain import get_bot_creator, get_server_info, add_role, remove_role, create_role, change_nickname, create_text_channel, create_voice_channel, delete_channel, delete_message, ban_member, unban_member, kick_member, bulk_delete_messages
+
+llm = LlamaCpp(
+    model_path="../models/Qwen_Qwen3-30B-A3B-IQ3_M.gguf",
+    n_gpu_layers=-1,
+    n_batch=512,
+    temperature=0.7,
+    max_tokens=512,
+    top_p=0.9,
+    n_ctx=4096,
+    verbose=True
+)
 
 class Agent:
     def __init__(self, context: dict):
@@ -107,9 +118,9 @@ class Agent:
         ]
 
         self.agent = initialize_agent(
-            tools=self.tools,
-            llm=ChatOllama(model="qwen3:14b"),
-            agent_type=AgentType.ZERO_SHOT_REACT_DESCRIPTION,
+            self.tools,
+            llm,
+            agent=AgentType.ZERO_SHOT_REACT_DESCRIPTION,
             verbose=False,
             handle_parsing_errors=True
         )
