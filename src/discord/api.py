@@ -1,6 +1,8 @@
 import aiohttp
 import json
 
+from exception import VesperException
+
 CONFIG = json.load(open("../config.json"))
 
 class DiscordAPI:
@@ -18,7 +20,7 @@ class DiscordAPI:
         async with aiohttp.ClientSession() as session:
             async with session.get(f"{DiscordAPI.BASE_URL}{endpoint}", headers=headers) as response:
                 if response.status >= 400:
-                    raise Exception(await response.text())
+                    raise VesperException(await response.text())
 
                 try:
                     return await response.json()
@@ -39,7 +41,7 @@ class DiscordAPI:
             if payload is not None: 
                 async with session.post(f"{DiscordAPI.BASE_URL}{endpoint}", json=payload, headers=headers) as response:
                     if response.status >= 400:
-                        raise Exception(await response.text())
+                        raise VesperException(await response.text())
 
                     try:
                         return await response.json()
@@ -66,7 +68,7 @@ class DiscordAPI:
         async with aiohttp.ClientSession() as session:
             async with session.patch(f"{DiscordAPI.BASE_URL}{endpoint}", json=payload, headers=headers) as response:
                 if response.status >= 400:
-                    raise Exception(await response.text())
+                    raise VesperException(await response.text())
 
                 try:
                     return await response.json()
@@ -87,7 +89,7 @@ class DiscordAPI:
             if payload is not None:
                 async with session.put(f"{DiscordAPI.BASE_URL}{endpoint}", json=payload, headers=headers) as response:
                     if response.status >= 400:
-                        raise Exception(await response.text())
+                        raise VesperException(await response.text())
 
                     try:
                         return await response.json()
@@ -114,7 +116,7 @@ class DiscordAPI:
             if payload is not None:
                 async with session.delete(f"{DiscordAPI.BASE_URL}{endpoint}", json=payload, headers=headers) as response:
                     if response.status >= 400:
-                        raise Exception(await response.text())
+                        raise VesperException(await response.text())
 
                     try:
                         return await response.json()
@@ -123,7 +125,7 @@ class DiscordAPI:
             else:
                 async with session.delete(f"{DiscordAPI.BASE_URL}{endpoint}", headers=headers) as response:
                     if response.status >= 400:
-                        raise Exception(await response.text())
+                        raise VesperException(await response.text())
 
                     try:
                         return await response.json()

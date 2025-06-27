@@ -1,0 +1,2 @@
+class VesperException(Exception):
+    pass

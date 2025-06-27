@@ -4,6 +4,7 @@ import torch
 from data import update_guild_counter, update_guild_interaction_count, check_guild_interaction_limit_hit, register_guild, guild_is_registered, get_guild_count
 from discord.messages import Messages
 from ai.agent import Agent
+from exception import VesperException
 
 CONFIG = json.load(open("../config.json"))
 
@@ -46,8 +47,12 @@ class Events:
                     response = await agent.respond(event_data["content"].replace(f"<@!{CONFIG['application_id']}>", ""))
 
                     await Messages.create_message(channel_id, response["output"])
+                except VesperException as ve:
+                    await Messages.create_message(channel_id, f"{ve}")
+                    return
                 except Exception as e:
-                    await Messages.create_message(channel_id, f"{e}")
+                    print(e)
+                    await Messages.create_message(channel_id, ":bangbang: Something went wrong. Please try again later.")
                     return
                 
             case "GUILD_CREATE":

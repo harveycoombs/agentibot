@@ -12,7 +12,7 @@ llm = LlamaCpp(
     max_tokens=512,
     top_p=0.9,
     n_ctx=4096,
-    verbose=True
+    verbose=False
 )
 
 class Agent:
@@ -32,35 +32,23 @@ class Agent:
                 description="Gets information about the current server."
             ),
             Tool(
-                name="add_role",
-                func=None,
-                coroutine=lambda x: add_role(x, self.context["guild_id"], self.context["author"]["id"]),
-                description="Adds a role to the user who is using the command. Input should be a string with the role's name."
-            ),
-            Tool(
                 name="add_role_to_user",
                 func=None,
-                coroutine=lambda x: add_role(x, self.context["guild_id"], self.context["author"]["id"], self.context["mentions"][1]["id"]),
+                coroutine=lambda x: add_role(x, self.context["guild_id"], self.context["author"]["id"], self.context.get("mentions", [{}])[1]["id"] if len(self.context.get("mentions", [])) > 1 else self.context["author"]["id"]),
                 description="Adds a role to another user. Input should be a string with the role's name."
             ),
             Tool(
-                name="remove_role_from_user",
+                name="remove_role_from_user", 
                 func=None,
-                coroutine=lambda x: remove_role(x, self.context["guild_id"], self.context["author"]["id"], self.context["mentions"][1]["id"]),
+                coroutine=lambda x: remove_role(x, self.context["guild_id"], self.context["author"]["id"], self.context.get("mentions", [{}])[1]["id"] if len(self.context.get("mentions", [])) > 1 else self.context["author"]["id"]),
                 description="Removes a role from another user. Input should be a string with the role's name."
             ),
-            Tool(
-                name="remove_role",
-                func=None,
-                coroutine=lambda x: remove_role(x, self.context["guild_id"], self.context["author"]["id"]),
-                description="Removes a role from a user. Input should be a string with the role's name."
-            ),
-            Tool(
-                name="create_role",
-                func=None,
-                coroutine=lambda x: create_role(x.split(" ")[0], x.split(" ")[1], self.context["guild_id"], self.context["author"]["id"]),
-                description="Creates a role. Input should be a string with the role's name and a string with the role's hex color."
-            ),
+            #Tool(
+            #    name="create_new_role",
+            #    func=None,
+            #    coroutine=lambda x: create_role(x.split(" ")[0], x.split(" ")[1], self.context["guild_id"], self.context["author"]["id"]),
+            #    description="Creates a brand new role with a name and color. Input should be a string with the role's name followed by a space and the role's hex color code (e.g. 'Moderator #FF0000')."
+            #),
             Tool(
                 name="change_nickname",
                 func=None,
@@ -100,19 +88,19 @@ class Agent:
             Tool(
                 name="ban_member",
                 func=None,
-                coroutine=lambda x: ban_member(self.context["mentions"][1]["id"], x, self.context["guild_id"], self.context["author"]["id"]),
+                coroutine=lambda x: ban_member(self.context.get("mentions", [{}])[1]["id"] if len(self.context.get("mentions", [])) > 1 else None, x, self.context["guild_id"], self.context["author"]["id"]),
                 description="Bans a member. Input should be a string with the reason for the ban."
             ),
             Tool(
                 name="unban_member",
                 func=None,
-                coroutine=lambda x: unban_member(x, self.context["guild_id"], self.context["mentions"][1]["id"], self.context["author"]["id"]),
+                coroutine=lambda x: unban_member(x, self.context["guild_id"], self.context.get("mentions", [{}])[1]["id"] if len(self.context.get("mentions", [])) > 1 else None, self.context["author"]["id"]),
                 description="Unbans a member. Input should be a string with the member's ID."
             ),
             Tool(
                 name="kick_member",
                 func=None,
-                coroutine=lambda _: kick_member(self.context["mentions"][1]["id"], self.context["guild_id"], self.context["author"]["id"]),
+                coroutine=lambda _: kick_member(self.context.get("mentions", [{}])[1]["id"] if len(self.context.get("mentions", [])) > 1 else None, self.context["guild_id"], self.context["author"]["id"]),
                 description="Kicks a member. Input should be a string with the member's ID."
             )
         ]
@@ -126,4 +114,10 @@ class Agent:
         )
 
     async def respond(self, prompt: str):
-        return await self.agent.ainvoke(prompt)
+        print("responding")
+
+        response = await self.agent.ainvoke(prompt)
+
+        print("response: ", response)
+
+        return response

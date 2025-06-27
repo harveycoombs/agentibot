@@ -2,6 +2,7 @@ import json
 import asyncio
 
 from discord.api import DiscordAPI
+from exception import VesperException
 
 CONFIG = json.load(open("../config.json"))
 
@@ -14,7 +15,7 @@ class Messages:
             messages = await DiscordAPI.get(f"channels/{channel_id}/messages")
             return messages
         except Exception:
-            raise Exception(":bangbang: Unable to retrieve messages.")
+            raise VesperException(":bangbang: Unable to retrieve messages.")
 
     @staticmethod    
     async def create_message(channel_id, content, embeds=None, components=None):
@@ -26,7 +27,7 @@ class Messages:
                 "components": components or []
             })
         except Exception:
-            raise Exception(":bangbang: Unable to create message.")
+            raise VesperException(":bangbang: Unable to create message.")
 
     @staticmethod
     async def update_message(channel_id, message_id, content=None, embeds=None):
@@ -36,14 +37,14 @@ class Messages:
                 "embeds": embeds or []
             })
         except Exception:
-            raise Exception(":bangbang: Unable to update message.")
+            raise VesperException(":bangbang: Unable to update message.")
 
     @staticmethod
     async def delete_message(channel_id, message_id):
         try:
             await DiscordAPI.delete(f"channels/{channel_id}/messages/{message_id}")
         except Exception:
-            raise Exception(":bangbang: Unable to delete message.")
+            raise VesperException(":bangbang: Unable to delete message.")
 
     @staticmethod
     async def bulk_delete_messages(channel_id, amount):
@@ -54,11 +55,11 @@ class Messages:
                 await DiscordAPI.delete(f"channels/{channel_id}/messages/{messages[x]['id']}")
                 await asyncio.sleep(0.75)
         except Exception:
-            raise Exception(":bangbang: Unable to bulk delete messages.")
+            raise VesperException(":bangbang: Unable to bulk delete messages.")
 
     @staticmethod
     async def add_reaction(channel_id, message_id, emoji):
         try:
             await DiscordAPI.post(f"channels/{channel_id}/messages/{message_id}/reactions/{emoji}/@me", payload=None)
         except Exception:
-            raise Exception(":bangbang: Unable to add reaction.")
+            raise VesperException(":bangbang: Unable to add reaction.")

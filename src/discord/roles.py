@@ -1,4 +1,5 @@
 from discord.api import DiscordAPI
+from exception import VesperException
 
 class Roles:
     @staticmethod
@@ -7,7 +8,7 @@ class Roles:
             roles = await DiscordAPI.get(f"guilds/{guild_id}/roles")
             return roles
         except Exception:
-            raise Exception(":bangbang: Unable to retrieve roles.")
+            raise VesperException(":bangbang: Unable to retrieve roles.")
 
     @staticmethod
     async def get_role(guild_id, role_id):
@@ -15,7 +16,7 @@ class Roles:
             role = await DiscordAPI.get(f"guilds/{guild_id}/roles/{role_id}")
             return role
         except Exception:
-            raise Exception(":bangbang: Unable to retrieve role.")
+            raise VesperException(":bangbang: Unable to retrieve role.")
     
     @staticmethod
     async def create_role(guild_id, name, color=0, hoist=False, mentionable=False, permissions=0):
@@ -28,25 +29,25 @@ class Roles:
             "permissions": permissions
             })
         except Exception:
-            raise Exception(":bangbang: Unable to create role.")
+            raise VesperException(":bangbang: Unable to create role.")
         
     @staticmethod
     async def delete_role(guild_id, role_id):
         try:
             await DiscordAPI.delete(f"guilds/{guild_id}/roles/{role_id}")
         except Exception:
-            raise Exception(":bangbang: Unable to delete role.")
+            raise VesperException(":bangbang: Unable to delete role.")
 
     @staticmethod
     async def add_role_to_user(guild_id, user_id, role_id):
         try:
             await DiscordAPI.put(f"guilds/{guild_id}/members/{user_id}/roles/{role_id}", payload=None)
         except Exception:
-            raise Exception(":bangbang: Unable to add role to user.")
+            raise VesperException(":bangbang: Unable to add role to user.")
 
     @staticmethod
     async def remove_role_from_user(guild_id, user_id, role_id):
         try:
             await DiscordAPI.delete(f"guilds/{guild_id}/members/{user_id}/roles/{role_id}", payload=None)
         except Exception:
-            raise Exception(":bangbang: Unable to remove role from user.")
+            raise VesperException(":bangbang: Unable to remove role from user.")
