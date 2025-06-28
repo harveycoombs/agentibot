@@ -8,10 +8,10 @@ llm = LlamaCpp(
     model_path="../models/Qwen_Qwen3-30B-A3B-IQ3_M.gguf",
     n_gpu_layers=-1,
     n_batch=512,
-    temperature=0.7,
+    temperature=0.9,
     max_tokens=512,
     top_p=0.9,
-    n_ctx=4096,
+    n_ctx=32768,
     verbose=False
 )
 

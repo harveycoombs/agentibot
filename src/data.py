@@ -179,3 +179,5 @@ def guild_is_registered(guild_id):
         if connection is not None and connection.is_connected():
             cursor.close()
             connection.close()
+
+#def insert_error_log(guild_id, author_id, error_message):

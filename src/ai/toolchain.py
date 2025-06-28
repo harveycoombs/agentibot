@@ -6,6 +6,7 @@ from discord.channels import Channels
 from discord.messages import Messages
 from discord.permissions import Permissions
 from discord.guilds import Guilds
+from exception import VesperException
  
 def get_bot_creator():
     return "[Harvey Coombs](https://harveycoombs.com)"
