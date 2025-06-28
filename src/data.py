@@ -180,4 +180,27 @@ def guild_is_registered(guild_id):
             cursor.close()
             connection.close()
 
-#def insert_error_log(guild_id, author_id, error_message):
+def insert_error_log(guild_id, author_id, prompt, error_message):
+    connection = None
+
+    try:
+        connection = mysql.connector.connect(
+            host=CONFIG["database"]["host"],
+            user=CONFIG["database"]["user"],
+            password=CONFIG["database"]["password"],
+            database=CONFIG["database"]["schema"]
+        )
+
+        cursor = connection.cursor(dictionary=True)
+
+        cursor.execute("INSERT INTO error_logs (log_id, incident_date, guild_id, author_id, prompt, error) VALUES(UUID(), NOW(), %s, %s, %s, %s)", (guild_id, author_id, prompt, error_message))
+        connection.commit()
+
+        return cursor.rowcount > 0
+    except mysql.connector.Error as e:
+        print(f"Unable to update guild interaction count: {e}")
+        return False
+    finally:
+        if connection is not None and connection.is_connected():
+            cursor.close()
+            connection.close()

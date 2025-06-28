@@ -16,8 +16,6 @@ async def get_server_info(guild_id):
     return json.dumps(guild)
 
 async def add_role(role_name, guild_id, author_id, target_id=None):
-    print("adding role")
-
     roles = await Roles.get_roles(guild_id)
     role = next((role for role in roles if role["name"].lower() == role_name.lower()), None)
 

@@ -1,7 +1,7 @@
 import json
 import torch
 
-from data import update_guild_counter, update_guild_interaction_count, check_guild_interaction_limit_hit, register_guild, guild_is_registered, get_guild_count
+from data import update_guild_counter, update_guild_interaction_count, check_guild_interaction_limit_hit, register_guild, guild_is_registered, get_guild_count, insert_error_log
 from discord.messages import Messages
 from ai.agent import Agent
 from exception import VesperException
@@ -51,7 +51,7 @@ class Events:
                     await Messages.create_message(channel_id, f"{ve}")
                     return
                 except Exception as e:
-                    print(e)
+                    insert_error_log(guild_id, author_id, event_data["content"], str(e))
                     await Messages.create_message(channel_id, ":bangbang: Something went wrong. Please try again later.")
                     return
                 

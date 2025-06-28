@@ -2,7 +2,7 @@ from langchain_community.llms import LlamaCpp
 from langchain.agents import initialize_agent, Tool
 from langchain.agents.agent_types import AgentType
 
-from ai.toolchain import get_bot_creator, get_server_info, add_role, remove_role, create_role, change_nickname, create_text_channel, create_voice_channel, delete_channel, delete_message, ban_member, unban_member, kick_member, bulk_delete_messages
+from ai.toolchain import get_bot_creator, get_server_info, add_role, remove_role, change_nickname, create_text_channel, create_voice_channel, delete_channel, delete_message, ban_member, unban_member, kick_member, bulk_delete_messages
 
 llm = LlamaCpp(
     model_path="../models/Qwen_Qwen3-30B-A3B-IQ3_M.gguf",
@@ -23,7 +23,7 @@ class Agent:
             Tool(
                 name="get_bot_creator",
                 func=lambda _: get_bot_creator(),
-                description="Gets the creator of the bot, which is you."
+                description="Gets the creator of you, the bot."
             ),
             Tool(
                 name="get_server_info",
@@ -43,12 +43,6 @@ class Agent:
                 coroutine=lambda x: remove_role(x, self.context["guild_id"], self.context["author"]["id"], self.context.get("mentions", [{}])[1]["id"] if len(self.context.get("mentions", [])) > 1 else self.context["author"]["id"]),
                 description="Removes a role from another user. Input should be a string with the role's name."
             ),
-            #Tool(
-            #    name="create_new_role",
-            #    func=None,
-            #    coroutine=lambda x: create_role(x.split(" ")[0], x.split(" ")[1], self.context["guild_id"], self.context["author"]["id"]),
-            #    description="Creates a brand new role with a name and color. Input should be a string with the role's name followed by a space and the role's hex color code (e.g. 'Moderator #FF0000')."
-            #),
             Tool(
                 name="change_nickname",
                 func=None,
@@ -114,10 +108,5 @@ class Agent:
         )
 
     async def respond(self, prompt: str):
-        print("responding")
-
         response = await self.agent.ainvoke(prompt)
-
-        print("response: ", response)
-
         return response
