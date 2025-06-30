@@ -19,7 +19,7 @@ class Events:
         match event_type:
             case "READY":
                 guild_count = len(event_data["guilds"])
-                
+
                 if CONFIG["application_id"] != "1365463510934360135":
                     update_guild_counter(guild_count)
 
