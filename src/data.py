@@ -54,7 +54,7 @@ def get_guild_count():
             cursor.close()
             connection.close()
 
-def register_guild(guild_id):
+def register_guild(guild_id, owner_id):
     connection = None
 
     try:
@@ -67,7 +67,7 @@ def register_guild(guild_id):
 
         cursor = connection.cursor(dictionary=True)
 
-        cursor.execute("INSERT INTO registered_guilds (guild_id, registration_date, interactions_this_month, interaction_start_date) VALUES (%s, %s, %s, %s)", (guild_id, datetime.now(), 0, datetime.now()))
+        cursor.execute("INSERT INTO registered_guilds (guild_id, owner_id, registration_date, interactions_this_month, interaction_start_date) VALUES (%s, %s, %s, %s, %s)", (guild_id, owner_id, datetime.now(), 0, datetime.now()))
         connection.commit()
     except mysql.connector.Error as e:
         print(f"Unable to register guild: {e}")
@@ -76,6 +76,29 @@ def register_guild(guild_id):
         if connection is not None and connection.is_connected():
             cursor.close()
             connection.close()
+
+def update_registered_guild_owner(guild_id, owner_id):
+    connection = None
+
+    try:
+        connection = mysql.connector.connect(
+            host=CONFIG["database"]["host"],
+            user=CONFIG["database"]["user"],
+            password=CONFIG["database"]["password"],
+            database=CONFIG["database"]["schema"]
+        )
+
+        cursor = connection.cursor(dictionary=True)
+
+        cursor.execute("UPDATE registered_guilds SET owner_id = %s WHERE guild_id = %s", (owner_id, guild_id))
+        connection.commit()
+    except mysql.connector.Error as e:
+        print(f"Unable to update registered guild owner: {e}")
+        return None
+    finally:
+        if connection is not None and connection.is_connected():
+            cursor.close()
+            connection.close()    
 
 def get_guild_interaction_count(guild_id):
     connection = None
@@ -200,6 +223,31 @@ def insert_error_log(guild_id, author_id, prompt, error_message):
     except mysql.connector.Error as e:
         print(f"Unable to update guild interaction count: {e}")
         return False
+    finally:
+        if connection is not None and connection.is_connected():
+            cursor.close()
+            connection.close()
+
+def get_settings(guild_id):
+    connection = None
+
+    try:
+        connection = mysql.connector.connect(
+            host=CONFIG["database"]["host"],
+            user=CONFIG["database"]["user"],
+            password=CONFIG["database"]["password"],
+            database=CONFIG["database"]["schema"]
+        )
+
+        cursor = connection.cursor(dictionary=True)
+
+        cursor.execute("SELECT * FROM user_settings WHERE user_id = (SELECT owner_id FROM registered_guilds WHERE guild_id = %s)", (guild_id,))
+        result = cursor.fetchone()
+
+        return result
+    except mysql.connector.Error as e:
+        print(f"Unable to get user settings: {e}")
+        return None
     finally:
         if connection is not None and connection.is_connected():
             cursor.close()

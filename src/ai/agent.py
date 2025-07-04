@@ -2,10 +2,10 @@ from langchain.agents import initialize_agent, Tool
 from langchain.agents.agent_types import AgentType
 
 from ai.toolchain import get_bot_creator, get_server_info, add_role, remove_role, change_nickname, create_text_channel, create_voice_channel, delete_channel, delete_message, ban_member, unban_member, kick_member, bulk_delete_messages
-from ai.models import qwen_30b_a3b_iq3_m
+from ai.models import models
 
 class Agent:
-    def __init__(self, context: dict):
+    def __init__(self, context: dict, model: str):
         self.context = context
 
         self.tools = [
@@ -90,7 +90,7 @@ class Agent:
 
         self.agent = initialize_agent(
             tools=self.tools,
-            llm=qwen_30b_a3b_iq3_m,
+            llm=models[model],
             agent=AgentType.ZERO_SHOT_REACT_DESCRIPTION,
             verbose=False,
             handle_parsing_errors=True

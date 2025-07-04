@@ -5,14 +5,14 @@ qwen_30b_a3b_iq3_m = LlamaCpp(
     n_gpu_layers=-1,
     n_batch=512,
     temperature=0.8,
-    max_tokens=512,
+    max_tokens=1500,
     top_p=0.9,
     n_ctx=32768,
     verbose=False
 )
 
 llama_4_scout_17b_16e_i1 = LlamaCpp(
-    model_path="../models/Llama-4-Scout-17B-16E-i1-GGUF.gguf",
+    model_path="../models/Llama-4-Scout-17B-16E-Instruct-UD-IQ1_M.gguf",
     n_gpu_layers=-1,
     n_batch=512,
     temperature=0.8,
@@ -21,3 +21,8 @@ llama_4_scout_17b_16e_i1 = LlamaCpp(
     n_ctx=32768,
     verbose=False
 )
+
+models = {
+    "qwen_30b_a3b_iq3_m": qwen_30b_a3b_iq3_m,
+    "llama_4_scout_17b_16e_i1": llama_4_scout_17b_16e_i1
+}

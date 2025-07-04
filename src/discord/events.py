@@ -1,7 +1,7 @@
 import json
 import torch
 
-from data import update_guild_counter, update_guild_interaction_count, check_guild_interaction_limit_hit, register_guild, guild_is_registered, get_guild_count, insert_error_log
+from data import update_guild_counter, update_guild_interaction_count, check_guild_interaction_limit_hit, register_guild, guild_is_registered, get_guild_count, insert_error_log, update_registered_guild_owner, get_settings
 from discord.messages import Messages
 from ai.agent import Agent
 from exception import VesperException
@@ -43,7 +43,9 @@ class Events:
                     update_guild_interaction_count(guild_id)
 
                 try:
-                    agent = Agent(context=event_data)
+                    settings = get_settings(guild_id)
+
+                    agent = Agent(context=event_data, model=settings["model"] if settings is not None else "qwen_30b_a3b_iq3_m")
                     response = await agent.respond(event_data["content"].replace(f"<@!{CONFIG['application_id']}>", ""))
 
                     await Messages.create_message(channel_id, response["output"])
@@ -57,9 +59,10 @@ class Events:
                 
             case "GUILD_CREATE":
                 guild_id = event_data["id"]
+                owner_id = event_data["owner_id"]
 
                 if not guild_is_registered(guild_id):
-                    register_guild(guild_id)
+                    register_guild(guild_id, owner_id)
 
                     update_guild_counter(get_guild_count() + 1)
 
@@ -81,3 +84,13 @@ class Events:
                         ]
                     }])
                     return
+                else:
+                    update_registered_guild_owner(guild_id, owner_id)
+
+            case "GUILD_UPDATE":
+                update_registered_guild_owner(event_data["guild_id"], event_data["owner_id"])
+                return
+            
+            case "GUILD_DELETE":
+                print(event_data)
+                return
