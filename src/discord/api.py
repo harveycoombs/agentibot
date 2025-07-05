@@ -7,6 +7,7 @@ CONFIG = json.load(open("../config.json"))
 
 class DiscordAPI:
     BASE_URL = "https://discord.com/api/"
+
     @staticmethod
     async def get(endpoint, additional_headers=None):
         headers = dict({
