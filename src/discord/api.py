@@ -1,9 +1,9 @@
 import aiohttp
-import json
+import yaml
 
 from exception import VesperException
 
-CONFIG = json.load(open("../config.json"))
+CONFIG = yaml.safe_load(open("config.yaml"))
 
 class DiscordAPI:
     BASE_URL = "https://discord.com/api/"

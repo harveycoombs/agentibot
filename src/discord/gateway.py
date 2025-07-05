@@ -1,11 +1,12 @@
 import websockets
 import asyncio
 import json
+import yaml
 
 from discord.api import DiscordAPI
 from discord.events import Events
 
-CONFIG = json.load(open("../config.json"))
+CONFIG = yaml.safe_load(open("config.yaml"))
 
 class Gateway:
     heartbeat = { "d": None, "op": 1 }

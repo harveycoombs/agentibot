@@ -1,10 +1,10 @@
-import json
+import yaml
 import asyncio
 
 from discord.api import DiscordAPI
 from exception import VesperException
 
-CONFIG = json.load(open("../config.json"))
+CONFIG = yaml.safe_load(open("config.yaml"))
 
 class Messages:
     embed_color = CONFIG["embed_color"]

@@ -1,12 +1,13 @@
 import json
 import torch
+import yaml
 
 from data import update_guild_counter, update_guild_interaction_count, check_guild_interaction_limit_hit, register_guild, guild_is_registered, get_guild_count, insert_error_log, update_registered_guild_owner, get_settings
 from discord.messages import Messages
 from ai.agent import Agent
 from exception import VesperException
 
-CONFIG = json.load(open("../config.json"))
+CONFIG = yaml.safe_load(open("config.yaml"))
 
 class Events:
     @staticmethod

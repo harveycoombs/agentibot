@@ -1,8 +1,8 @@
 import mysql.connector
-import json
 from datetime import datetime
+import yaml
 
-CONFIG = json.load(open("../config.json"))
+CONFIG = yaml.safe_load(open("config.yaml"))
 
 def update_guild_counter(count):
     connection = None
