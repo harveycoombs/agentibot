@@ -56,10 +56,3 @@ class Messages:
                 await asyncio.sleep(0.75)
         except Exception:
             raise VesperException(":bangbang: Unable to bulk delete messages.")
-
-    @staticmethod
-    async def add_reaction(channel_id, message_id, emoji):
-        try:
-            await DiscordAPI.post(f"channels/{channel_id}/messages/{message_id}/reactions/{emoji}/@me", payload=None)
-        except Exception:
-            raise VesperException(":bangbang: Unable to add reaction.")
