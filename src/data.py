@@ -2,7 +2,7 @@ import mysql.connector
 from datetime import datetime
 import yaml
 
-CONFIG = yaml.safe_load(open("config.yaml"))
+CONFIG = yaml.safe_load(open("../config.yaml"))
 
 def update_guild_counter(count):
     connection = None

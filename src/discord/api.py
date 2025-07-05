@@ -3,7 +3,7 @@ import yaml
 
 from exception import VesperException
 
-CONFIG = yaml.safe_load(open("config.yaml"))
+CONFIG = yaml.safe_load(open("../config.yaml"))
 
 class DiscordAPI:
     BASE_URL = "https://discord.com/api/"
