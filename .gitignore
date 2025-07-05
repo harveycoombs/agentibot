@@ -1,4 +1,31 @@
-__pycache__
-/config.json
-.venv
+# Python bytecode
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Configuration files
+/config.yaml
+*.env
+
+# Virtual environments
+.venv/
+venv/
+env/
+ENV/
+
+# Model files and weights
 models/
+*.pt
+*.pth
+*.ckpt
+
+# IDE and editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Logs and local files
+*.log
+.DS_Store
