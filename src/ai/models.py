@@ -27,6 +27,6 @@ llama_4_scout_17b_16e_i1 = LlamaCpp(
 )
 
 models = {
-    "qwen_30b_a3b_iq3_m": qwen_30b_a3b_iq3_m,
-    "llama_4_scout_17b_16e_i1": llama_4_scout_17b_16e_i1
+    "qwen-3-30b-a3b": qwen_30b_a3b_iq3_m,
+    "llama-4-scout-17b-16e": llama_4_scout_17b_16e_i1
 }

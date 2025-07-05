@@ -7,6 +7,7 @@ from ai.models import models
 class Agent:
     def __init__(self, context: dict, model: str):
         self.context = context
+        self.model = model
 
         self.tools = [
             Tool(
@@ -90,7 +91,7 @@ class Agent:
 
         self.agent = initialize_agent(
             tools=self.tools,
-            llm=models[model],
+            llm=models[self.model],
             agent=AgentType.ZERO_SHOT_REACT_DESCRIPTION,
             verbose=False,
             handle_parsing_errors=True
