@@ -2,7 +2,7 @@ import json
 import torch
 import yaml
 
-from data import update_guild_counter, update_guild_interaction_count, check_guild_interaction_limit_hit, register_guild, guild_is_registered, get_guild_count, insert_error_log, update_registered_guild_owner, get_settings
+from data import update_guild_interaction_count, check_guild_interaction_limit_hit, register_guild, guild_is_registered, insert_error_log, update_registered_guild_owner, get_settings
 from discord.messages import Messages
 from ai.agent import Agent
 from exception import VesperException
@@ -19,12 +19,7 @@ class Events:
 
         match event_type:
             case "READY":
-                guild_count = len(event_data["guilds"])
-
-                if CONFIG["application_id"] != "1365463510934360135":
-                    update_guild_counter(guild_count)
-
-                print(f"Discord Gateway: Ready in {guild_count} guilds\n\nCUDA Version: {torch.version.cuda}\nCUDA Available: {'Yes' if torch.cuda.is_available() else 'No'}\nCuDNN Available: {'Yes' if torch.backends.cudnn.enabled else 'No'}\nDevices: {torch.cuda.device_count()}")
+                print(f"Discord Gateway: Ready in {len(event_data['guilds'])} guilds\n\nCUDA Version: {torch.version.cuda}\nCUDA Available: {'Yes' if torch.cuda.is_available() else 'No'}\nCuDNN Available: {'Yes' if torch.backends.cudnn.enabled else 'No'}\nDevices: {torch.cuda.device_count()}")
                 return
 
             case "MESSAGE_CREATE":
@@ -64,8 +59,6 @@ class Events:
 
                 if not guild_is_registered(guild_id):
                     register_guild(guild_id, owner_id)
-
-                    update_guild_counter(get_guild_count() + 1)
 
                     system_channel_id = event_data["system_channel_id"]
 

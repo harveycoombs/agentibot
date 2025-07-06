@@ -4,56 +4,6 @@ import yaml
 
 CONFIG = yaml.safe_load(open("../config.yaml"))
 
-def update_guild_counter(count):
-    connection = None
-
-    try:
-        connection = mysql.connector.connect(
-            host=CONFIG["database"]["host"],
-            user=CONFIG["database"]["user"],
-            password=CONFIG["database"]["password"],
-            database=CONFIG["database"]["schema"]
-        )
-
-        if not connection:
-            print(f"Failed to connect to database.")
-
-        cursor = connection.cursor(dictionary=True)
-        cursor.execute("UPDATE bot_stats SET server_count = %s", (count,))
-        connection.commit()
-    except mysql.connector.Error as e:
-        print(f"Unable to update guild counter: {e}")
-        return None
-    finally:
-        if connection is not None and connection.is_connected():
-            cursor.close()
-            connection.close()
-
-def get_guild_count():
-    connection = None
-
-    try:
-        connection = mysql.connector.connect(
-            host=CONFIG["database"]["host"],
-            user=CONFIG["database"]["user"],
-            password=CONFIG["database"]["password"],
-            database=CONFIG["database"]["schema"]
-        )
-
-        cursor = connection.cursor(dictionary=True)
-
-        cursor.execute("SELECT server_count FROM bot_stats")
-        result = cursor.fetchone()
-
-        return result["server_count"]
-    except mysql.connector.Error as e:
-        print(f"Unable to get guild count: {e}")
-        return None
-    finally:
-        if connection is not None and connection.is_connected():
-            cursor.close()
-            connection.close()
-
 def register_guild(guild_id, owner_id):
     connection = None
 
