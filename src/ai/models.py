@@ -9,7 +9,7 @@ magistral_small_2506 = LlamaCpp(
     temperature=0.8,
     max_tokens=2048,
     top_p=0.95,
-    n_ctx=496,
+    n_ctx=2048,
     verbose=False
 )
 
