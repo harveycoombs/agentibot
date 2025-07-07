@@ -1,5 +1,4 @@
 import json
-import torch
 import yaml
 
 from data import update_guild_interaction_count, check_guild_interaction_limit_hit, register_guild, guild_is_registered, insert_error_log, update_registered_guild_owner, get_settings
@@ -19,7 +18,7 @@ class Events:
 
         match event_type:
             case "READY":
-                print(f"Discord Gateway: Ready in {len(event_data['guilds'])} guilds\n\nCUDA Version: {torch.version.cuda}\nCUDA Available: {'Yes' if torch.cuda.is_available() else 'No'}\nCuDNN Available: {'Yes' if torch.backends.cudnn.enabled else 'No'}\nDevices: {torch.cuda.device_count()}")
+                print(f"Vesper is ready in {len(event_data['guilds'])} guilds.")
                 return
 
             case "MESSAGE_CREATE":
@@ -39,9 +38,7 @@ class Events:
                     update_guild_interaction_count(guild_id)
 
                 try:
-                    settings = get_settings(guild_id)
-
-                    agent = Agent(context=event_data, model=settings["model"] if settings is not None else "qwen_30b_a3b_iq3_m")
+                    agent = Agent(context=event_data, model="magistral-small-2506")
                     response = await agent.respond(event_data["content"].replace(f"<@!{CONFIG['application_id']}>", ""))
 
                     await Messages.create_message(channel_id, response["output"])
