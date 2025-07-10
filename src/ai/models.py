@@ -1,16 +1,15 @@
-from langchain_community.llms import LlamaCpp
+from langchain_community.llms import VLLM
 
 print("Loading Magistral Small 2506...")
 
-magistral_small_2506 = LlamaCpp(
-    model_path="../models/Magistral-Small-2506-Q6_K_L.gguf",
-    n_gpu_layers=-1,
-    n_batch=512,
-    temperature=0.8,
-    max_tokens=2048,
+magistral_small_2506 = VLLM(
+    model="bartowski/mistralai_Magistral-Small-2506-GGUF",
+    trust_remote_code=True,
+    max_new_tokens=2048,
+    top_k=10,
     top_p=0.95,
-    n_ctx=8192,
-    verbose=False
+    temperature=0.85,
+    tensor_parallel_size=1
 )
 
 models = {
