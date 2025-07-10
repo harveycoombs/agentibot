@@ -9,7 +9,8 @@ magistral_small_2506 = VLLM(
     top_k=10,
     top_p=0.95,
     temperature=0.85,
-    tensor_parallel_size=1
+    tensor_parallel_size=1,
+    tokenizer_mode="mistral"
 )
 
 models = {
