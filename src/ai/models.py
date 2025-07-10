@@ -2,7 +2,7 @@ from langchain_community.llms import VLLM
 
 print("Loading Qwen3 (8B)...")
 
-magistral_small_2506 = VLLM(
+qwen3_8b = VLLM(
     model="Qwen/Qwen3-8B",
     trust_remote_code=True,
     max_new_tokens=2048,
@@ -13,5 +13,5 @@ magistral_small_2506 = VLLM(
 )
 
 models = {
-    "magistral-small-2506": magistral_small_2506
+    "qwen3-8b": qwen3_8b
 }
