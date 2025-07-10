@@ -1,6 +1,6 @@
 from langchain_community.llms import VLLM
 
-print("Loading Magistral Small 2506...")
+print("Loading Qwen3 (8B)...")
 
 magistral_small_2506 = VLLM(
     model="Qwen/Qwen3-8B",
