@@ -4,6 +4,7 @@ print("Loading Magistral Small 2506...")
 
 magistral_small_2506 = VLLM(
     model="mistralai/Magistral-Small-2506",
+    tokenizer="mistralai/Magistral-Small-2506",
     trust_remote_code=True,
     max_new_tokens=2048,
     top_k=10,
