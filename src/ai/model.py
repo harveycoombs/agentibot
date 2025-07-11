@@ -8,7 +8,7 @@ quant_config = BitsAndBytesConfig(
 )
 
 model = VLLM(
-    model="unsloth/Magistral-Small-2506-GGUF",
+    model="unsloth/Qwen3-8B-GGUF",
     engine_kwargs={ "quantization": quant_config },
     trust_remote_code=True,
     max_new_tokens=2048,
