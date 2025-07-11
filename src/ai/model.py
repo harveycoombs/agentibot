@@ -9,7 +9,6 @@ model = VLLM(
     temperature=0.85,
     tensor_parallel_size=1,
     vllm_kwargs={
-    #    "quantization": "q4_k_m",
         "max_model_len": 2048
     }
 )
