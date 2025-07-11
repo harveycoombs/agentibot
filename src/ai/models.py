@@ -3,7 +3,7 @@ from langchain_community.llms import VLLM
 print("Loading Qwen3 8B...")
 
 qwen3_8b = VLLM(
-    model="Qwen/Qwen3-8B",
+    model="Qwen/Qwen3-8B-AWQ",
     trust_remote_code=True,
     max_new_tokens=2048,
     top_k=10,
