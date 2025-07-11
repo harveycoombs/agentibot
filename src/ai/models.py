@@ -1,9 +1,9 @@
 from langchain_community.llms import VLLM
 
-print("Loading Qwen3 14B...")
+print("Loading Qwen3 8B...")
 
-qwen3_14b = VLLM(
-    model="Qwen/Qwen3-14B",
+qwen3_8b = VLLM(
+    model="Qwen/Qwen3-8B",
     trust_remote_code=True,
     max_new_tokens=2048,
     top_k=10,
@@ -13,5 +13,5 @@ qwen3_14b = VLLM(
 )
 
 models = {
-    "qwen3-14b": qwen3_14b
+    "qwen3-8b": qwen3_8b
 }
