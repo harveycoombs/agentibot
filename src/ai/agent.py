@@ -1,8 +1,21 @@
 from langchain.agents import initialize_agent, Tool
 from langchain.agents.agent_types import AgentType
+from langchain_community.llms import VLLM
 
 from ai.toolchain import get_bot_creator, get_server_info, add_role, remove_role, change_nickname, create_text_channel, create_voice_channel, delete_channel, delete_message, ban_member, unban_member, kick_member, bulk_delete_messages
-from ai.model import model
+
+model = VLLM(
+    model="unsloth/Qwen3-8B-bnb-4bit",
+    trust_remote_code=True,
+    max_new_tokens=2048,
+    top_k=10,
+    top_p=0.95,
+    temperature=0.85,
+    tensor_parallel_size=1,
+    vllm_kwargs={
+        "max_model_len": 2048
+    }
+)
 
 class Agent:
     def __init__(self, context: dict):
