@@ -1,5 +1,4 @@
 from langchain_community.llms import VLLM
-from transformers import BitsAndBytesConfig
 
 model = VLLM(
     model="unsloth/Qwen3-8B-GGUF",
