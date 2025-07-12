@@ -1,10 +1,11 @@
+import os
 import yaml
 import asyncio
 
 from discord.api import DiscordAPI
 from exception import VesperException
 
-CONFIG = yaml.safe_load(open("../config.yaml"))
+CONFIG = yaml.safe_load(open(os.path.join(os.path.dirname(__file__), "..", "config.yaml")))
 
 class Messages:
     embed_color = CONFIG["embed_color"]
