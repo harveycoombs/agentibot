@@ -1,6 +1,7 @@
 from langchain.agents import initialize_agent, Tool
 from langchain.agents.agent_types import AgentType
 from langchain_community.llms import VLLM
+from langchain_anthropic import ChatAnthropic
 
 from ai.toolchain import get_bot_creator, get_server_info, add_role, remove_role, change_nickname, create_text_channel, create_voice_channel, delete_channel, delete_message, ban_member, unban_member, kick_member, bulk_delete_messages
 
@@ -15,6 +16,14 @@ model = VLLM(
     vllm_kwargs={
         "max_model_len": 2048
     }
+)
+
+claude = ChatAnthropic(
+    model="claude-3-5-haiku-20241022",
+    temperature=0.85,
+    max_tokens=2048,
+    top_p=0.95,
+    top_k=10
 )
 
 class Agent:
