@@ -1,3 +1,4 @@
+import os
 import json
 import yaml
 import redis
@@ -7,7 +8,7 @@ from discord.messages import Messages
 from ai.agent import Agent
 from exception import VesperException
 
-CONFIG = yaml.safe_load(open("/srv/vesper/config.yaml"))
+CONFIG = yaml.safe_load(open(f"{os.getcwd().replace("\\", "/")}/config.yaml"))
 
 rc = redis.Redis(host="localhost", port=6379, db=0)
 

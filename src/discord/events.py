@@ -7,7 +7,7 @@ from discord.messages import Messages
 from ai.agent import Agent
 from exception import VesperException
 
-CONFIG = yaml.safe_load(open("/srv/vesper/config.yaml"))
+CONFIG = yaml.safe_load(open(f"{os.getcwd().replace("\\", "/")}/config.yaml"))
 
 class Events:
     @staticmethod

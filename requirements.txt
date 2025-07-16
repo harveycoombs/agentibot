@@ -1,0 +1,9 @@
+vllm
+aiohttp
+websockets
+psycopg[binary,pool]
+langchain
+langchain-community
+langchain-anthropic
+langchain-openai
+bitsandbytes

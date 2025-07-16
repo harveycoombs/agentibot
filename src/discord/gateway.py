@@ -7,7 +7,7 @@ import yaml
 from discord.api import DiscordAPI
 from discord.events import Events
 
-CONFIG = yaml.safe_load(open("/srv/vesper/config.yaml"))
+CONFIG = yaml.safe_load(open(f"{os.getcwd().replace("\\", "/")}/config.yaml"))
 
 class Gateway:
     heartbeat = { "d": None, "op": 1 }

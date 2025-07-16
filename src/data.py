@@ -3,7 +3,7 @@ import psycopg
 from datetime import datetime
 import yaml
 
-CONFIG = yaml.safe_load(open("/srv/vesper/config.yaml"))
+CONFIG = yaml.safe_load(open(f"{os.getcwd().replace("\\", "/")}/config.yaml"))
 
 def register_guild(guild_id, owner_id):
     connection = None

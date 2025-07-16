@@ -4,7 +4,7 @@ import yaml
 
 from exception import VesperException
 
-CONFIG = yaml.safe_load(open("/srv/vesper/config.yaml"))
+CONFIG = yaml.safe_load(open(f"{os.getcwd().replace("\\", "/")}/config.yaml"))
 
 class DiscordAPI:
     BASE_URL = "https://discord.com/api/"
