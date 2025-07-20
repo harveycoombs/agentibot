@@ -1,6 +1,7 @@
 import os
 import json
 import yaml
+import redis
 
 from data import update_guild_interaction_count, check_guild_interaction_limit_hit, register_guild, guild_is_registered, insert_error_log, update_registered_guild_owner, get_settings
 from discord.messages import Messages
@@ -8,6 +9,8 @@ from ai.agent import Agent
 from exception import VesperException
 
 CONFIG = yaml.safe_load(open(f"{os.getcwd().replace("\\", "/")}/config.yaml"))
+
+rc = redis.Redis(host="localhost", port=6379, db=0)
 
 class Events:
     @staticmethod
@@ -19,6 +22,7 @@ class Events:
 
         match event_type:
             case "READY":
+                rc.set("guild_count", len(event_data["guilds"]))
                 print(f"Vesper is ready in {len(event_data['guilds'])} guilds.")
                 return
 
@@ -39,7 +43,7 @@ class Events:
                     update_guild_interaction_count(guild_id)
 
                 try:
-                    agent = Agent(context=event_data)
+                    agent = Agent(context=event_data, model="qwen3-8b")
                     response = await agent.respond(event_data["content"].replace(f"<@!{CONFIG['application_id']}>", ""))
 
                     await Messages.create_message(channel_id, response["output"])
@@ -59,6 +63,8 @@ class Events:
                     register_guild(guild_id, owner_id)
 
                     system_channel_id = event_data["system_channel_id"]
+
+                    rc.incr("guild_count")                
 
                     await Messages.create_message(system_channel_id, None, [{
                         "title": ":wave: Thank you for inviting me to your server!",
@@ -84,5 +90,5 @@ class Events:
                 return
             
             case "GUILD_DELETE":
-                print(event_data)
+                rc.decr("guild_count")
                 return
