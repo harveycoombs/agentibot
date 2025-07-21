@@ -43,7 +43,7 @@ class Events:
                     update_guild_interaction_count(guild_id)
 
                 try:
-                    agent = Agent(context=event_data, model="qwen3-8b")
+                    agent = Agent(context=event_data)
                     response = await agent.respond(event_data["content"].replace(f"<@!{CONFIG['application_id']}>", ""))
 
                     await Messages.create_message(channel_id, response["output"])
