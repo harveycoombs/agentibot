@@ -30,7 +30,7 @@ claude = ChatAnthropic(
 
 gpt = ChatOpenAI(
     api_key=CONFIG["openai_api_key"],
-    model="gpt-4.1-mini",
+    model="gpt-5-mini",
     temperature=0.85,
     max_tokens=2048,
     top_p=0.95,
