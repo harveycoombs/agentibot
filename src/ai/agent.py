@@ -5,9 +5,9 @@ from ai.models import models
 from ai.toolchain import get_bot_creator, get_server_info, add_role, remove_role, change_nickname, create_text_channel, create_voice_channel, delete_channel, delete_message, ban_member, unban_member, kick_member, bulk_delete_messages
 
 class Agent:
-    def __init__(self, context: dict, model: str = "qwen"):
+    def __init__(self, context: dict):
         self.context = context
-        self.model = model
+        #self.model = model
 
         self.tools = [
             Tool(
@@ -91,7 +91,8 @@ class Agent:
 
         self.agent = initialize_agent(
             tools=self.tools,
-            llm=models[self.context["model"] if len(self.context["model"]) > 0 else "qwen"],
+            llm=models["gpt"],
+            # self.context["model"] if len(self.context["model"]) > 0 else "qwen"
             agent=AgentType.ZERO_SHOT_REACT_DESCRIPTION,
             verbose=False,
             handle_parsing_errors=True
