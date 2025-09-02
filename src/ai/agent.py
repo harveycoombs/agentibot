@@ -91,7 +91,7 @@ class Agent:
 
         self.agent = initialize_agent(
             tools=self.tools,
-            llm=models["gpt"],
+            llm=models["qwen"],
             # self.context["model"] if len(self.context["model"]) > 0 else "qwen"
             agent=AgentType.ZERO_SHOT_REACT_DESCRIPTION,
             verbose=False,
