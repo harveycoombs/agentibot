@@ -29,8 +29,10 @@ class Events:
             case "MESSAGE_CREATE":
                 author_id = event_data["author"]["id"]
                 channel_id = event_data["channel_id"]
+                guild_id = event_data["guild_id"]
 
-                model = get_settings(author_id)["model"] if get_settings(author_id) is not None else "qwen"
+                settings = get_settings(guild_id)
+                model = settings["model"] if settings is not None else "qwen"
 
                 print(f"\n\n\nUser's Model: {model}\n\n\n")
 
