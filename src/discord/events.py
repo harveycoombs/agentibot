@@ -32,6 +32,8 @@ class Events:
 
                 model = get_settings(author_id)["model"] if get_settings(author_id) is not None else "qwen"
 
+                print(f"\n\n\nUser's Model: {model}\n\n\n")
+
                 if author_id == CONFIG["application_id"] or CONFIG["application_id"] not in [mention["id"] for mention in event_data["mentions"]]:
                     return
 
