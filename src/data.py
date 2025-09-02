@@ -192,7 +192,7 @@ def get_settings(guild_id):
 
         cursor = connection.cursor(row_factory=psycopg.rows.dict_row)
 
-        cursor.execute("SELECT * FROM vesper.user_settings WHERE user_id = (SELECT owner_id FROM vesper.registered_guilds WHERE guild_id = %s)", (guild_id,))
+        cursor.execute("SELECT * FROM vesper.settings WHERE user_id = (SELECT owner_id FROM vesper.registered_guilds WHERE guild_id = %s)", (guild_id,))
         result = cursor.fetchone()
 
         return result
