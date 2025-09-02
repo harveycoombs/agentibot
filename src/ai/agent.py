@@ -99,7 +99,7 @@ class Agent:
         )
 
     async def respond(self, prompt: str):
-        print(f"Model: {self.model}")
+        print(f"\n\n\nModel: {self.model}\n\n\n")
 
         response = await self.agent.ainvoke(prompt)
         return response

@@ -30,6 +30,8 @@ class Events:
                 author_id = event_data["author"]["id"]
                 channel_id = event_data["channel_id"]
 
+                model = get_settings(author_id)["model"] if get_settings(author_id) is not None else "qwen"
+
                 if author_id == CONFIG["application_id"] or CONFIG["application_id"] not in [mention["id"] for mention in event_data["mentions"]]:
                     return
 
@@ -43,7 +45,7 @@ class Events:
                     update_guild_interaction_count(guild_id)
 
                 try:
-                    agent = Agent(context=event_data)
+                    agent = Agent(context=event_data, model=model)
                     response = await agent.respond(event_data["content"].replace(f"<@!{CONFIG['application_id']}>", ""))
 
                     await Messages.create_message(channel_id, response["output"])
