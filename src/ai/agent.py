@@ -91,15 +91,12 @@ class Agent:
 
         self.agent = initialize_agent(
             tools=self.tools,
-            llm=models["qwen"],
-            # self.context["model"] if len(self.context["model"]) > 0 else "qwen"
+            llm=self.model if len(self.model) > 0 else "qwen",
             agent=AgentType.ZERO_SHOT_REACT_DESCRIPTION,
             verbose=False,
             handle_parsing_errors=True
         )
 
     async def respond(self, prompt: str):
-        print(f"\n\n\nModel: {self.model}\n\n\n")
-
         response = await self.agent.ainvoke(prompt)
         return response
