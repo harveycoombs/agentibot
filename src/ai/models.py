@@ -35,19 +35,6 @@ gpt = ChatOpenAI(
     max_tokens=2048
 )
 
-#gpt_oss = VLLM(
-#    model="unsloth/gpt-oss-20b-GGUF",
-#    trust_remote_code=True,
-#    max_new_tokens=2048,
-#    top_k=10,
-#    top_p=0.95,
-#    temperature=0.85,
-#    tensor_parallel_size=1,
-#    vllm_kwargs={
-#        "max_model_len": 2048
-#    }
-#)
-
 models = {
     "qwen": qwen,
     "claude": claude,
