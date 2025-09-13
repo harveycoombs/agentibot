@@ -32,7 +32,7 @@ class Events:
                 guild_id = event_data["guild_id"]
 
                 settings = get_settings(guild_id)
-                model = settings["model"] if settings is not None else "qwen"
+                model = settings["model"] if settings is not None else "mistral"
 
                 if author_id == CONFIG["application_id"] or CONFIG["application_id"] not in [mention["id"] for mention in event_data["mentions"]]:
                     return

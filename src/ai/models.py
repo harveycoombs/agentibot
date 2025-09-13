@@ -6,8 +6,8 @@ from langchain_openai import ChatOpenAI
 
 CONFIG = yaml.safe_load(open(f"{os.getcwd().replace("\\", "/")}/config.yaml"))
 
-qwen = VLLM(
-    model="unsloth/Qwen3-8B-bnb-4bit",
+mistral = VLLM(
+    model="unsloth/Mistral-Small-3.2-24B-Instruct-2506-unsloth-bnb-4bit",
     trust_remote_code=True,
     max_new_tokens=2048,
     top_k=10,
@@ -36,7 +36,7 @@ gpt = ChatOpenAI(
 )
 
 models = {
-    "qwen": qwen,
+    "mistral": mistral,
     "claude": claude,
     "gpt": gpt
 }
