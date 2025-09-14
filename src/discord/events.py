@@ -41,7 +41,7 @@ class Events:
 
                 if CONFIG["application_id"] != "1365463510934360135":
                     if check_guild_interaction_limit_hit(guild_id):
-                        await Messages.create_message(channel_id, f":warning: You've reached your monthly interaction limit. [Click here](https://vesper.gg/pro) to learn more.")
+                        await Messages.create_message(channel_id, ":warning: You've reached your monthly interaction limit. [Click here](https://vesper.gg/pro) to learn more.")
                         return
 
                     update_guild_interaction_count(guild_id)
