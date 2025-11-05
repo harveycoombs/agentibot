@@ -91,8 +91,8 @@ class Agent:
 
         self.agent = initialize_agent(
             tools=self.tools,
-            llm=models[self.model if len(self.model) > 0 else "mistral"],
-            agent=AgentType.OPENAI_MULTI_FUNCTIONS if self.model == "gpt" else AgentType.ZERO_SHOT_REACT_DESCRIPTION,
+            llm=models[self.model if len(self.model) > 0 else "gpt-5-nano"],
+            agent=AgentType.OPENAI_MULTI_FUNCTIONS if self.model.startswith("gpt") else AgentType.ZERO_SHOT_REACT_DESCRIPTION,
             verbose=False,
             handle_parsing_errors=True
         )
