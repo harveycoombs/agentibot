@@ -1,7 +1,12 @@
-from langchain.agents import create_agent
+import os
+import yaml
 import json
+from langchain.agents import create_agent
 
 from ai.toolchain import get_bot_creator, get_server_info, add_role, remove_role, change_nickname, create_text_channel, create_voice_channel, delete_channel, delete_message, ban_member, unban_member, kick_member, bulk_delete_messages
+
+CONFIG = yaml.safe_load(open(f"{os.getcwd().replace("\\", "/")}/config.yaml"))
+os.environ["OPENAI_API_KEY"] = CONFIG["openai_api_key"]
 
 class Agent:
     def __init__(self, context: dict, model: str):
