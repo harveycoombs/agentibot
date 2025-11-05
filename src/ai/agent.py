@@ -20,5 +20,5 @@ class Agent:
         )
 
     async def respond(self, prompt: str):
-        response = await self.agent.ainvoke(prompt)
-        return response
+        response = await self.agent.ainvoke({ "messages": [{ "role": "user", "content": prompt }]})
+        return response["messages"][-1].content

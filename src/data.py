@@ -2,8 +2,19 @@ import os
 import psycopg
 from datetime import datetime
 import yaml
+import redis
 
 CONFIG = yaml.safe_load(open(f"{os.getcwd().replace("\\", "/")}/config.yaml"))
+
+def setup_guild_counter(count):
+    try:
+        rc = redis.Redis(host="localhost", port=6379, db=0)
+        rc.set("guild_count", count)
+
+        return rc
+    except Exception as e:
+        print(f"Unable to setup guild counter: {e}")
+        return None
 
 def register_guild(guild_id, owner_id):
     connection = None
