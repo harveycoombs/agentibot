@@ -1,3 +1,3 @@
-<p align="center"><img src="https://vesper.gg/images/icon.png" width="120" /></p>
+<p align="center"><img src="https://vesperbot.ai/images/icon.png" width="120" /></p>
 
-# [Vesper](https://vesper.gg) &middot; Agentic AI Discord Bot
+# [Vesper](https://vesperbot.ai) &middot; Agentic AI Discord Bot
