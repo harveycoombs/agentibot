@@ -31,7 +31,7 @@ class Events:
                 guild_id = event_data["guild_id"]
 
                 settings = get_settings(guild_id)
-                model = settings["model"] if settings is not None else "gpt-5-mini"
+                model = settings["model"] if settings is not None else "gpt-5-nano"
 
                 if author_id == CONFIG["application_id"] or CONFIG["application_id"] not in [mention["id"] for mention in event_data["mentions"]]:
                     return
@@ -40,7 +40,7 @@ class Events:
 
                 if CONFIG["application_id"] != "1028726248861605999":
                     if check_guild_interaction_limit_hit(guild_id):
-                        await Messages.create_message(channel_id, ":warning: You've reached your monthly interaction limit. [Click here](https://vesper.gg/pro) to learn more.")
+                        await Messages.create_message(channel_id, ":warning: You've reached your monthly interaction limit. [Click here](https://vesperbot.ai/pro) to learn more.")
                         return
 
                     update_guild_interaction_count(guild_id)
@@ -82,7 +82,7 @@ class Events:
                                 "type": 2,
                                 "label": "Website",
                                 "style": 5,
-                                "url": "https://vesper.gg"
+                                "url": "https://vesperbot.ai"
                             }
                         ]
                     }])
