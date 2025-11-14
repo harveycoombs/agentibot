@@ -190,7 +190,7 @@ def insert_error_log(guild_id, author_id, prompt, error_message):
             cursor.close()
             connection.close()
 
-def get_settings(guild_id):
+def get_model_choice(guild_id):
     connection = None
 
     try:
@@ -203,12 +203,15 @@ def get_settings(guild_id):
 
         cursor = connection.cursor(row_factory=psycopg.rows.dict_row)
 
-        cursor.execute("SELECT * FROM vesper.settings WHERE user_id = (SELECT owner_id FROM vesper.registered_guilds WHERE guild_id = %s)", (guild_id,))
+        cursor.execute("SELECT model FROM vesper.users WHERE user_id = (SELECT owner_id FROM vesper.registered_guilds WHERE guild_id = %s)", (guild_id,))
         result = cursor.fetchone()
 
-        return result
+        if result is None:
+            return "gpt-5-nano"
+
+        return result["model"]
     except psycopg.Error as e:
-        print(f"Unable to get user settings: {e}")
+        print(f"Unable to get model choice: {e}")
         return None
     finally:
         if connection is not None:
