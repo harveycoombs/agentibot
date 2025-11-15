@@ -209,7 +209,7 @@ def get_model_choice(guild_id):
         if result is None:
             return "gpt-5-nano"
 
-        return result["model"]
+        return result["model"] if result["model"] is not None else "gpt-5-nano"
     except psycopg.Error as e:
         print(f"Unable to get model choice: {e}")
         return None
