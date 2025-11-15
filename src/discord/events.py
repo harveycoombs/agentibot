@@ -32,8 +32,6 @@ class Events:
 
                 model = get_model_choice(guild_id)
 
-                print(model)
-
                 if author_id == CONFIG["application_id"] or CONFIG["application_id"] not in [mention["id"] for mention in event_data["mentions"]]:
                     return
 
