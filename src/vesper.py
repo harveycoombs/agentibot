@@ -1,4 +1,4 @@
-# Vesper vesperbot.ai ~ Written by Harvey Coombs ~ 2020-2024
+# Vesper ~ vesperbot.ai ~ Written by Harvey Coombs ~ 2020-2024
 import asyncio
 from discord.gateway import Gateway
 
