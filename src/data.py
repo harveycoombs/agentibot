@@ -1,5 +1,4 @@
 import os
-import psycopg
 from datetime import datetime
 import yaml
 import redis
