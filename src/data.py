@@ -3,8 +3,12 @@ import psycopg
 from datetime import datetime
 import yaml
 import redis
+from supabase import create_client, Client
+from datetime import datetime, timedelta
 
 CONFIG = yaml.safe_load(open(f"{os.getcwd().replace("\\", "/")}/config.yaml"))
+
+supabase: Client = create_client(CONFIG["supabase"]["url"], CONFIG["supabase"]["key"])
 
 def setup_guild_counter(count):
     try:
@@ -17,203 +21,162 @@ def setup_guild_counter(count):
         return None
 
 def register_guild(guild_id, owner_id):
-    connection = None
-
     try:
-        connection = psycopg.connect(
-            host=CONFIG["database"]["host"],
-            user=CONFIG["database"]["user"],
-            password=CONFIG["database"]["password"],
-            dbname=CONFIG["database"]["schema"]
-        )
+        response = supabase.table("vesper.guilds").insert({
+            "guild_id": guild_id,
+            "owner_id": owner_id,
+            "registration_date": datetime.now().isoformat(),
+            "interactions_this_month": 0,
+            "interaction_start_date": datetime.now().isoformat()
+        }).execute()
 
-        cursor = connection.cursor(row_factory=psycopg.rows.dict_row)
-
-        cursor.execute("INSERT INTO vesper.guilds (guild_id, owner_id, registration_date, interactions_this_month, interaction_start_date) VALUES (%s, %s, %s, %s, %s)", (guild_id, owner_id, datetime.now(), 0, datetime.now()))
-        connection.commit()
-    except psycopg.Error as e:
+        if response.get("error"):
+            print(f"Unable to register guild: {response['error']['message']}")
+            return None
+    except Exception as e:
         print(f"Unable to register guild: {e}")
         return None
-    finally:
-        if connection is not None:
-            cursor.close()
-            connection.close()
 
 def update_registered_guild_owner(guild_id, owner_id):
-    connection = None
-
     try:
-        connection = psycopg.connect(
-            host=CONFIG["database"]["host"],
-            user=CONFIG["database"]["user"],
-            password=CONFIG["database"]["password"],
-            dbname=CONFIG["database"]["schema"]
-        )
+        response = supabase.table("vesper.guilds").update({ "owner_id": owner_id }).eq("guild_id", guild_id).execute()
 
-        cursor = connection.cursor(row_factory=psycopg.rows.dict_row)
-
-        cursor.execute("UPDATE vesper.guilds SET owner_id = %s WHERE guild_id = %s", (owner_id, guild_id))
-        connection.commit()
-    except psycopg.Error as e:
+        if response.get("error"):
+            print(f"Unable to update registered guild owner: {response['error']['message']}")
+            return None
+    except Exception as e:
         print(f"Unable to update registered guild owner: {e}")
         return None
-    finally:
-        if connection is not None:
-            cursor.close()
-            connection.close()    
 
 def get_guild_interaction_count(guild_id):
-    connection = None
-
     try:
-        connection = psycopg.connect(
-            host=CONFIG["database"]["host"],
-            user=CONFIG["database"]["user"],
-            password=CONFIG["database"]["password"],
-            dbname=CONFIG["database"]["schema"]
-        )
+        response = supabase.table("vesper.guilds").select("interactions_this_month").eq("guild_id", guild_id).single().execute()
 
-        cursor = connection.cursor(row_factory=psycopg.rows.dict_row)
-
-        cursor.execute("SELECT interactions_this_month FROM vesper.guilds WHERE guild_id = %s", (guild_id,))
-        result = cursor.fetchone()
-
-        if result is None:
+        if response.get("error"):
+            print(f"Unable to get guild interaction count: {response['error']['message']}")
             return 0
 
-        return result["interactions_this_month"]
-    except psycopg.Error as e:
+        data = response.get("data")
+        if not data or "interactions_this_month" not in data:
+            return 0
+
+        return data["interactions_this_month"]
+    except Exception as e:
         print(f"Unable to get guild interaction count: {e}")
         return 0
-    finally:
-        if connection is not None:
-            cursor.close()
-            connection.close()
 
 def update_guild_interaction_count(guild_id):
-    connection = None
-
     try:
-        connection = psycopg.connect(
-            host=CONFIG["database"]["host"],
-            user=CONFIG["database"]["user"],
-            password=CONFIG["database"]["password"],
-            dbname=CONFIG["database"]["schema"]
-        )
+        response = supabase.table("vesper.guilds").update({
+            "interactions_this_month": supabase.rpc("increment_field", {
+                "field_name": "interactions_this_month",
+                "increment_by": 1
+            })
+        }).eq("guild_id", guild_id).execute()
 
-        cursor = connection.cursor(row_factory=psycopg.rows.dict_row)
+        if response.get("error"):
+            print(f"Unable to update guild interaction count: {response['error']['message']}")
+            return False
 
-        cursor.execute("UPDATE vesper.guilds SET interactions_this_month = interactions_this_month + 1 WHERE guild_id = %s", (guild_id,))
-        connection.commit()
-
-        return cursor.rowcount > 0
-    except psycopg.Error as e:
+        return bool(response.get("data"))
+    except Exception as e:
         print(f"Unable to update guild interaction count: {e}")
         return False
-    finally:
-        if connection is not None:
-            cursor.close()
-            connection.close()
 
 def check_guild_interaction_limit_hit(guild_id):
-    connection = None
-
     try:
-        connection = psycopg.connect(
-            host=CONFIG["database"]["host"],
-            user=CONFIG["database"]["user"],
-            password=CONFIG["database"]["password"],
-            dbname=CONFIG["database"]["schema"]
-        )
+        response = supabase.table("vesper.guilds").select("interactions_this_month, interaction_start_date").eq("guild_id", guild_id).single().execute()
 
-        cursor = connection.cursor(row_factory=psycopg.rows.dict_row)
+        if response.get("error"):
+            print(f"Unable to check guild interaction limit hit: {response['error']['message']}")
+            return None
 
-        cursor.execute("SELECT COUNT(*) AS n FROM vesper.guilds WHERE interactions_this_month >= 200 AND interaction_start_date >= NOW() - INTERVAL '1 month' AND guild_id = %s", (guild_id,))
-        result = cursor.fetchone()
+        data = response.get("data")
 
-        return result["n"] > 0
-    except psycopg.Error as e:
+        if not data:
+            return False
+
+        interactions_this_month = data.get("interactions_this_month", 0)
+        raw_interaction_start_date = data.get("interaction_start_date")
+
+        if interactions_this_month is None or raw_interaction_start_date is None:
+            return False
+
+        interaction_start_date = datetime.fromisoformat(raw_interaction_start_date.rstrip("Z"))
+
+        now = datetime.now()
+        one_month_ago = now - timedelta(days=30)
+
+        if (interactions_this_month >= 200 and interaction_start_date >= one_month_ago):
+            return True
+
+        return False
+    except Exception as e:
         print(f"Unable to check guild interaction limit hit: {e}")
         return None
-    finally:
-        if connection is not None:
-            cursor.close()
-            connection.close()
 
 def guild_is_registered(guild_id):
-    connection = None
-
     try:
-        connection = psycopg.connect(
-            host=CONFIG["database"]["host"],
-            user=CONFIG["database"]["user"],
-            password=CONFIG["database"]["password"],
-            dbname=CONFIG["database"]["schema"]
-        )
+        response = supabase.table("vesper.guilds").select("guild_id").eq("guild_id", guild_id).single().execute()
 
-        cursor = connection.cursor(row_factory=psycopg.rows.dict_row)
+        if response.get("error"):
+            if response["error"]["code"] == "PGRST116":
+                return False
 
-        cursor.execute("SELECT COUNT(*) AS n FROM vesper.guilds WHERE guild_id = %s", (guild_id,))
-        result = cursor.fetchone()
+            print(f"Unable to check if guild is registered: {response['error']['message']}")
+            return False
 
-        return result["n"] > 0
-    except psycopg.Error as e:
+        data = response.get("data")
+        return bool(data and data.get("guild_id") == guild_id)
+    except Exception as e:
         print(f"Unable to check if guild is registered: {e}")
         return False
-    finally:
-        if connection is not None:
-            cursor.close()
-            connection.close()
 
 def insert_error_log(guild_id, author_id, prompt, error_message):
-    connection = None
-
     try:
-        connection = psycopg.connect(
-            host=CONFIG["database"]["host"],
-            user=CONFIG["database"]["user"],
-            password=CONFIG["database"]["password"],
-            dbname=CONFIG["database"]["schema"]
-        )
+        response = supabase.table("vesper.errors").insert({
+            "incident_date": datetime.now().isoformat(),
+            "guild_id": guild_id,
+            "author_id": author_id,
+            "prompt": prompt,
+            "error": error_message
+        }).execute()
 
-        cursor = connection.cursor(row_factory=psycopg.rows.dict_row)
+        if response.get("error"):
+            print(f"Unable to insert error log: {response['error']['message']}")
+            return False
 
-        cursor.execute("INSERT INTO vesper.errors (error_id, incident_date, guild_id, author_id, prompt, error) VALUES(gen_random_uuid(), NOW(), %s, %s, %s, %s)", (guild_id, author_id, prompt, error_message))
-        connection.commit()
-
-        return cursor.rowcount > 0
-    except psycopg.Error as e:
-        print(f"Unable to update guild interaction count: {e}")
+        return bool(response.get("data"))
+    except Exception as e:
+        print(f"Unable to insert error log: {e}")
         return False
-    finally:
-        if connection is not None:
-            cursor.close()
-            connection.close()
 
 def get_model_choice(guild_id):
-    connection = None
-
     try:
-        connection = psycopg.connect(
-            host=CONFIG["database"]["host"],
-            user=CONFIG["database"]["user"],
-            password=CONFIG["database"]["password"],
-            dbname=CONFIG["database"]["schema"]
-        )
+        guild_response = supabase.table("vesper.guilds").select("owner_id").eq("guild_id", guild_id).single().execute()
 
-        cursor = connection.cursor(row_factory=psycopg.rows.dict_row)
-
-        cursor.execute("SELECT model FROM vesper.users WHERE user_id = (SELECT owner_id FROM vesper.guilds WHERE guild_id = %s)", (guild_id,))
-        result = cursor.fetchone()
-
-        if result is None:
+        if guild_response.get("error"):
+            print(f"Unable to get guild owner_id: {guild_response['error']['message']}")
             return "gpt-5-nano"
 
-        return result["model"] if result["model"] is not None else "gpt-5-nano"
-    except psycopg.Error as e:
+        guild_data = guild_response.get("data")
+        owner_id = guild_data.get("owner_id") if guild_data else None
+
+        if not owner_id:
+            return "gpt-5-nano"
+
+        user_response = supabase.table("vesper.users").select("model").eq("user_id", owner_id).single().execute()
+
+        if user_response.get("error"):
+            print(f"Unable to get user model: {user_response['error']['message']}")
+            return "gpt-5-nano"
+
+        user_data = user_response.get("data")
+
+        if not user_data or user_data.get("model") is None:
+            return "gpt-5-nano"
+
+        return user_data["model"]
+    except Exception as e:
         print(f"Unable to get model choice: {e}")
-        return None
-    finally:
-        if connection is not None:
-            cursor.close()
-            connection.close()
+        return "gpt-5-nano"
