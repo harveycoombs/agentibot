@@ -1,14 +1,14 @@
 import os
-import yaml
 import asyncio
+from dotenv import load_dotenv
 
 from discord.api import DiscordAPI
 from exception import VesperException
 
-CONFIG = yaml.safe_load(open(f"{os.getcwd().replace("\\", "/")}/config.yaml"))
+load_dotenv()
 
 class Messages:
-    embed_color = CONFIG["embed_color"]
+    embed_color = os.getenv("EMBED_COLOR")
 
     @staticmethod
     async def get_messages(channel_id):

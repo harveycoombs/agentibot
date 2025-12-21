@@ -1,10 +1,10 @@
 import os
 import aiohttp
-import yaml
+from dotenv import load_dotenv
 
 from exception import VesperException
 
-CONFIG = yaml.safe_load(open(f"{os.getcwd().replace("\\", "/")}/config.yaml"))
+load_dotenv()
 
 class DiscordAPI:
     BASE_URL = "https://discord.com/api/"
@@ -12,7 +12,7 @@ class DiscordAPI:
     @staticmethod
     async def get(endpoint, additional_headers=None):
         headers = dict({
-            "Authorization": f"Bot {CONFIG['token']}",
+            "Authorization": f"Bot {os.getenv('TOKEN')}",
             "Content-Type": "application/json"
         })
         
@@ -32,7 +32,7 @@ class DiscordAPI:
     @staticmethod
     async def post(endpoint, payload, additional_headers=None):
         headers = dict({
-            "Authorization": f"Bot {CONFIG['token']}",
+            "Authorization": f"Bot {os.getenv('TOKEN')}",
             "Content-Type": "application/json"
         })
 
@@ -60,7 +60,7 @@ class DiscordAPI:
     @staticmethod
     async def patch(endpoint, payload, additional_headers=None):
         headers = dict({
-            "Authorization": f"Bot {CONFIG['token']}",
+            "Authorization": f"Bot {os.getenv('TOKEN')}",
             "Content-Type": "application/json"
         })
 
@@ -80,7 +80,7 @@ class DiscordAPI:
     @staticmethod
     async def put(endpoint, payload, additional_headers=None):
         headers = dict({
-            "Authorization": f"Bot {CONFIG['token']}",
+            "Authorization": f"Bot {os.getenv('TOKEN')}",
             "Content-Type": "application/json"
         })
 
@@ -107,7 +107,7 @@ class DiscordAPI:
     @staticmethod
     async def delete(endpoint, payload=None, additional_headers=None):
         headers = dict({
-            "Authorization": f"Bot {CONFIG['token']}",
+            "Authorization": f"Bot {os.getenv('TOKEN')}",
             "Content-Type": "application/json"
         })
 

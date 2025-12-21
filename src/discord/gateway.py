@@ -2,19 +2,19 @@ import os
 import websockets
 import asyncio
 import json
-import yaml
+from dotenv import load_dotenv
 
 from discord.api import DiscordAPI
 from discord.events import Events
 
-CONFIG = yaml.safe_load(open(f"{os.getcwd().replace("\\", "/")}/config.yaml"))
+load_dotenv()
 
 class Gateway:
     heartbeat = { "d": None, "op": 1 }
 
     identity = {
         "d": {
-            "token": CONFIG["token"],
+            "token": os.getenv("TOKEN"),
             "intents": 513,
             "properties": { "$os": "linux" }
         },

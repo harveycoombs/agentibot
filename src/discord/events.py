@@ -1,13 +1,13 @@
 import os
 import json
-import yaml
+from dotenv import load_dotenv
 
 from data import update_guild_interaction_count, check_guild_interaction_limit_hit, register_guild, guild_is_registered, insert_error_log, update_registered_guild_owner, get_model_choice, setup_guild_counter
 from discord.messages import Messages
 from ai.agent import Agent
 from exception import VesperException
 
-CONFIG = yaml.safe_load(open(f"{os.getcwd().replace("\\", "/")}/config.yaml"))
+load_dotenv()
 
 rc = None
 
@@ -32,7 +32,7 @@ class Events:
 
                 model = get_model_choice(guild_id)
 
-                if author_id == CONFIG["application_id"] or CONFIG["application_id"] not in [mention["id"] for mention in event_data["mentions"]]:
+                if author_id == os.getenv("APPLICATION_ID") or os.getenv("APPLICATION_ID") not in [mention["id"] for mention in event_data["mentions"]]:
                     return
 
                 guild_id = event_data["guild_id"]
@@ -45,7 +45,7 @@ class Events:
 
                 try:
                     agent = Agent(context=event_data, model=model)
-                    response = await agent.respond(event_data["content"].replace(f"<@!{CONFIG['application_id']}>", ""))
+                    response = await agent.respond(event_data["content"].replace(f"<@!{os.getenv('APPLICATION_ID')}>", ""))
 
                     await Messages.create_message(channel_id, response)
                 except VesperException as ve:

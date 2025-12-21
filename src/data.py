@@ -1,13 +1,13 @@
 import os
 from datetime import datetime
-import yaml
 import redis
 from supabase import create_client, Client
 from datetime import datetime, timedelta
+from dotenv import load_dotenv
 
-CONFIG = yaml.safe_load(open(f"{os.getcwd().replace("\\", "/")}/config.yaml"))
+load_dotenv()
 
-supabase: Client = create_client(CONFIG["supabase"]["url"], CONFIG["supabase"]["key"])
+supabase: Client = create_client(os.getenv("SUPABASE_URL"), os.getenv("SUPABASE_KEY"))
 
 def setup_guild_counter(count):
     try:
