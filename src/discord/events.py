@@ -2,14 +2,14 @@ import os
 import json
 from dotenv import load_dotenv
 
-from data import update_guild_interaction_count, check_guild_interaction_limit_hit, register_guild, guild_is_registered, insert_error_log, update_registered_guild_owner, get_model_choice, setup_guild_counter
+from data import update_guild_interaction_count, check_guild_interaction_limit_hit, register_guild, guild_is_registered, insert_error_log, update_registered_guild_owner, get_model_choice#, setup_guild_counter
 from discord.messages import Messages
 from ai.agent import Agent
 from exception import VesperException
 
 load_dotenv()
 
-rc = None
+#rc = None
 
 class Events:
     @staticmethod
@@ -21,7 +21,7 @@ class Events:
 
         match event_type:
             case "READY":
-                rc = setup_guild_counter(len(event_data["guilds"]))
+                #rc = setup_guild_counter(len(event_data["guilds"]))
                 print(f"Vesper is ready in {len(event_data['guilds'])} guilds.")
                 return
 
@@ -66,8 +66,8 @@ class Events:
 
                     system_channel_id = event_data["system_channel_id"]         
 
-                    if rc is not None:
-                        rc.incr("guild_count")
+                    #if rc is not None:
+                    #    rc.incr("guild_count")
 
                     await Messages.create_message(system_channel_id, None, [{
                         "title": ":wave: Thank you for inviting me to your server!",
@@ -92,7 +92,7 @@ class Events:
                 update_registered_guild_owner(event_data["guild_id"], event_data["owner_id"])
                 return
             
-            case "GUILD_DELETE":
-                if rc is not None:
-                    rc.decr("guild_count")
-                return
+#            case "GUILD_DELETE":
+#                if rc is not None:
+#                    rc.decr("guild_count")
+#                return

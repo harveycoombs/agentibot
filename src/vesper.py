@@ -7,7 +7,7 @@ async def main():
         try:
             await Gateway.connect()
         except Exception as ex:
-            print(f"Discord gateway raised an exception: {ex.message}")
+            print(ex)
 
         await asyncio.sleep(4)
 

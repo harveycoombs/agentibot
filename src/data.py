@@ -1,6 +1,6 @@
 import os
 from datetime import datetime
-import redis
+#import redis
 from supabase import create_client, Client
 from datetime import datetime, timedelta
 from dotenv import load_dotenv
@@ -9,15 +9,15 @@ load_dotenv()
 
 supabase: Client = create_client(os.getenv("SUPABASE_URL"), os.getenv("SUPABASE_KEY"))
 
-def setup_guild_counter(count):
-    try:
-        rc = redis.Redis(host="localhost", port=6379, db=0)
-        rc.set("guild_count", count)
+#def setup_guild_counter(count):
+#    try:
+#        rc = redis.Redis(host="localhost", port=6379, db=0)
+#        rc.set("guild_count", count)
 
-        return rc
-    except Exception as e:
-        print(f"Unable to setup guild counter: {e}")
-        return None
+#        return rc
+#    except Exception as e:
+#        print(f"Unable to setup guild counter: {e}")
+#        return None
 
 def register_guild(guild_id, owner_id):
     try:
