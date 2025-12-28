@@ -3,3 +3,4 @@ websockets
 langchain[openai]
 redis
 supabase
+python-dotenv
