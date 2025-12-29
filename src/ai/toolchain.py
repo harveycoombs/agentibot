@@ -45,6 +45,7 @@ async def remove_role(role_name: str, guild_id: str, author_id: str, target_id: 
     return f":white_check_mark: I have removed the '{role_name}' role."
 
 async def create_role(role_name: str, role_color: str, guild_id: str, author_id: str) -> str:
+    """Creates a role. Input should be a string with the role's name and a string with the role's color."""
     color_hex = role_color.replace("#", "").replace("\"", "").strip()
     safe_role_name = role_name.strip("\"").strip()
 
