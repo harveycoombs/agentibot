@@ -34,16 +34,11 @@ def get_guild_interaction_count(guild_id):
         print(f"Unable to get guild interaction count: {e}")
         return 0
 
-def update_guild_interaction_count(guild_id):
+def set_guild_interaction_count(guild_id, count):
     try:
-        supabase.table("guilds").update({
-            "interactions_this_month": supabase.rpc("increment_field", {
-                "field_name": "interactions_this_month",
-                "increment_by": 1
-            })
-        }).eq("guild_id", guild_id).execute()
+        supabase.table("guilds").update({ "interactions_this_month": count }).eq("guild_id", guild_id).execute()
     except Exception as e:
-        print(f"Unable to update guild interaction count: {e}")
+        print(f"Unable to set guild interaction count: {e}")
 
 def check_guild_interaction_limit_hit(guild_id):
     try:

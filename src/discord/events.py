@@ -2,7 +2,7 @@ import os
 import json
 from dotenv import load_dotenv
 
-from data import update_guild_interaction_count, check_guild_interaction_limit_hit, register_guild, guild_is_registered, insert_error_log, update_registered_guild_owner, get_model_choice
+from data import get_guild_interaction_count, set_guild_interaction_count, check_guild_interaction_limit_hit, register_guild, guild_is_registered, insert_error_log, update_registered_guild_owner, get_model_choice
 from kv import get_kv, set_kv
 from discord.messages import Messages
 from ai.agent import Agent
@@ -37,10 +37,11 @@ class Events:
                 guild_id = event_data["guild_id"]
 
                 if check_guild_interaction_limit_hit(guild_id):
-                    await Messages.create_message(channel_id, ":warning: You've reached your monthly interaction limit. [Click here](https://vesperbot.ai/pro) to learn more.")
+                    await Messages.create_message(channel_id, ":warning: You've reached your monthly interaction limit. Visit the [Pricing](https://vesperbot.ai/pricing) page to learn more about increasing your limit.")
                     return
 
-                update_guild_interaction_count(guild_id)
+                interaction_count = get_guild_interaction_count(guild_id)
+                set_guild_interaction_count(guild_id, interaction_count + 1)
 
                 try:
                     agent = Agent(context=event_data, model=model)
