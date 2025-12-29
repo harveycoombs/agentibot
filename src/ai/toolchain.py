@@ -139,25 +139,34 @@ async def delete_channel(channel_name: str, guild_id: str, author_id: str) -> st
     await Channels.delete_channel(channel["id"])
     return f":white_check_mark: I have deleted the '{channel_name}' channel."
 
-async def rename_channel(guild_id: str, channel_id: str, new_name: str, author_id: str) -> str:
-    """Deletes a message. Input should be a string with the message's content."""
-    member = await Members.get_member(guild_id, author_id)
+async def rename_channel(guild_id: str, channel_name: str, new_name: str, message_author_id: str) -> str:
+    """Renames a channel. Input should be a string with the channel's name and a string with the new name."""
+
+    print("renaming channel...")
+
+    member = await Members.get_member(guild_id, message_author_id)
     roles = await Roles.get_roles(guild_id)
     guild = await Guilds.get_guild(guild_id)
 
     member_roles = [role for role in roles if role["id"] in member["roles"]]
 
-    if len(member_roles) == 0 and guild["owner_id"] != author_id:
+    if len(member_roles) == 0 and guild["owner_id"] != message_author_id:
         raise VesperException(":no_entry_sign: You do not have permission to rename channels.")
 
     for role in member_roles:
-        if Permissions.has_permission(role["permissions_new"], Permissions.MANAGE_CHANNELS) or guild["owner_id"] == author_id:
+        if Permissions.has_permission(role["permissions_new"], Permissions.MANAGE_CHANNELS) or guild["owner_id"] == message_author_id:
             break
         else:
             raise VesperException(":no_entry_sign: You do not have permission to rename channels.")
 
-    await Channels.rename_channel(channel_id, new_name)
-    return f":white_check_mark: I have renamed the <#{channel_id}> channel to '{new_name}'."
+    channels = await Channels.get_channels(guild_id)
+    channel = next((channel for channel in channels if channel["name"].strip().lower() == channel_name.strip().lower()), None)
+
+    if channel is None:
+        raise VesperException(f":warning: The provided channel does not exist.")
+
+    await Channels.rename_channel(channel["id"], new_name)
+    return f":white_check_mark: I have renamed the <#{channel['id']}> channel to '{new_name}'."
 
 async def delete_message(channel_id: str, message_id: str, guild_id: str, author_id: str) -> str:
     """Deletes a message. Input should be a string with the message's ID.""" 
