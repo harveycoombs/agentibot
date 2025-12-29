@@ -11,15 +11,30 @@ class Channels:
             raise VesperException(":bangbang: Unable to retrieve channels.")
 
     @staticmethod
-    async def create_channel(guild_id, channel_name, channel_type=0):
+    async def get_channel_categories(guild_id):
+        try:
+            categories = await DiscordAPI.get(f"guilds/{guild_id}/channels?type=4")
+            return categories
+        except Exception:
+            raise VesperException(":bangbang: Unable to retrieve channel categories.")
+
+    @staticmethod
+    async def create_channel(guild_id, channel_name, channel_type=0, category_name=None):
+        categories = await Channels.get_channel_categories(guild_id)
+        category_id = next(category["id"] for category in categories if category["name"].strip().lower() == category_name.strip().lower()) if category_name else None
+
+        print(category_name, category_id)
+
         try:
             response = await DiscordAPI.post(f"guilds/{guild_id}/channels", {
                 "name": channel_name,
-                "type": channel_type
+                "type": channel_type,
+                "parent_id": category_id
             })
 
             return response["id"]
-        except Exception:
+        except Exception as ex:
+            print(ex)
             raise VesperException(":bangbang: Unable to create channel.")
         
     @staticmethod

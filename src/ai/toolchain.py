@@ -71,44 +71,46 @@ async def change_nickname(nickname: str, guild_id: str, author_id: str) -> str:
     await Members.update_member(guild_id, author_id, nickname)
     return f":white_check_mark: I have changed your nickname to '{nickname}'."
 
-async def create_text_channel(channel_name: str, guild_id: str, author_id: str) -> str:
-    """Creates a text channel. Input should be a string with the channel's name."""
-    member = await Members.get_member(guild_id, author_id)
+async def create_text_channel(channel_name: str, guild_id: str, message_author_id: str, category_name: str = None) -> str:
+    """Creates a text channel. Input should be a string with the channel's name and optionally a string with the category's name."""
+    print(channel_name, guild_id, message_author_id, category_name)
+
+    member = await Members.get_member(guild_id, message_author_id)
     roles = await Roles.get_roles(guild_id)
     guild = await Guilds.get_guild(guild_id)
 
     member_roles = [role for role in roles if role["id"] in member["roles"]]
 
-    if len(member_roles) == 0 and guild["owner_id"] != author_id:
+    if len(member_roles) == 0 and guild["owner_id"] != message_author_id:
         raise VesperException(":no_entry_sign: You do not have permission to create channels.")
 
     for role in member_roles:
-        if Permissions.has_permission(role["permissions_new"], Permissions.MANAGE_CHANNELS) or guild["owner_id"] == author_id:
+        if Permissions.has_permission(role["permissions_new"], Permissions.MANAGE_CHANNELS) or guild["owner_id"] == message_author_id:
             break
         else:
             raise VesperException(":no_entry_sign: You do not have permission to create channels.")
 
-    new_channel_id = await Channels.create_channel(guild_id, channel_name)
+    new_channel_id = await Channels.create_channel(guild_id, channel_name, 0, category_name)
     return f":white_check_mark: I have created the <#{new_channel_id}> channel."
 
-async def create_voice_channel(channel_name: str, guild_id: str, author_id: str) -> str:
-    """Creates a voice channel. Input should be a string with the channel's name."""
-    member = await Members.get_member(guild_id, author_id)
+async def create_voice_channel(channel_name: str, guild_id: str, message_author_id: str, category_name: str = None) -> str:
+    """Creates a voice channel. Input should be a string with the channel's name and optionally a string with the category's name."""
+    member = await Members.get_member(guild_id, message_author_id)
     roles = await Roles.get_roles(guild_id)
     guild = await Guilds.get_guild(guild_id)
 
     member_roles = [role for role in roles if role["id"] in member["roles"]]
 
-    if len(member_roles) == 0 and guild["owner_id"] != author_id:
+    if len(member_roles) == 0 and guild["owner_id"] != message_author_id:
         raise VesperException(":no_entry_sign: You do not have permission to create channels.")
 
     for role in member_roles:
-        if Permissions.has_permission(role["permissions_new"], Permissions.MANAGE_CHANNELS) or guild["owner_id"] == author_id:
+        if Permissions.has_permission(role["permissions_new"], Permissions.MANAGE_CHANNELS) or guild["owner_id"] == message_author_id:
             break
         else:
             raise VesperException(":no_entry_sign: You do not have permission to create channels.")
         
-    new_channel_id = await Channels.create_channel(guild_id, channel_name, 2)
+    new_channel_id = await Channels.create_channel(guild_id, channel_name, 2, category_name)
     return f":white_check_mark: I have created the <#{new_channel_id}> channel."
 
 async def delete_channel(channel_name: str, guild_id: str, author_id: str) -> str:
