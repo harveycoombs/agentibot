@@ -47,7 +47,11 @@ class Events:
                     agent = Agent(context=event_data, model=model)
                     response = await agent.respond(event_data["content"].replace(f"<@!{os.getenv('APPLICATION_ID')}>", ""))
 
-                    await Messages.create_message(channel_id, response)
+                    if len(response) > 2000:
+                        for x in range(0, len(response), 2000):
+                            await Messages.create_message(channel_id, response[x:x+2000])
+                    else:
+                        await Messages.create_message(channel_id, response)
                 except VesperException as ve:
                     await Messages.create_message(channel_id, f"{ve}")
                     return
