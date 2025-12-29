@@ -22,11 +22,11 @@ class Roles:
     async def create_role(guild_id, name, color=0, hoist=False, mentionable=False, permissions=0):
         try:
             await DiscordAPI.post(f"guilds/{guild_id}/roles", {
-            "name": name,
-            "color": color,
-            "hoist": hoist,
-            "mentionable": mentionable,
-            "permissions": permissions
+                "name": name,
+                "color": color,
+                "hoist": hoist,
+                "mentionable": mentionable,
+                "permissions": permissions
             })
         except Exception:
             raise VesperException(":bangbang: Unable to create role.")
