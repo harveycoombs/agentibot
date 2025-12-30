@@ -7,6 +7,7 @@ from discord.messages import Messages
 from discord.permissions import Permissions
 from discord.guilds import Guilds
 from exception import VesperException
+from data import get_guild_interaction_count
  
 def get_bot_creator() -> str:
     """Gets the creator of you, the bot."""
@@ -265,3 +266,8 @@ async def kick_member(member_id: str, guild_id: str, author_id: str) -> str:
         
     await Members.remove_member(guild_id, member_id)
     return f":white_check_mark: I have kicked <@{member_id}>."
+
+async def get_server_interaction_count(guild_id: str) -> int:
+    """Gets the interaction count for the current server."""
+    interactions = get_guild_interaction_count(guild_id)
+    return interactions
