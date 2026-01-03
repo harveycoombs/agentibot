@@ -1,4 +1,5 @@
 import json
+import os
 
 from discord.roles import Roles
 from discord.members import Members
@@ -8,6 +9,7 @@ from discord.permissions import Permissions
 from discord.guilds import Guilds
 from exception import VesperException
 from data import get_guild_interaction_count
+from ai.images import generate_image
  
 def get_bot_creator() -> str:
     """Gets the creator of you, the bot."""
@@ -271,3 +273,9 @@ async def get_server_interaction_count(guild_id: str) -> int:
     """Gets the interaction count for the current server."""
     interactions = get_guild_interaction_count(guild_id)
     return interactions
+
+async def generate_image_from_prompt(prompt: str):
+    """Generates an image. Input should be a string with the prompt."""
+
+    output_path = os.path.join(os.getcwd(), "result.png")
+    generate_image(prompt, output_path)
