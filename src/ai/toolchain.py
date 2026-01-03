@@ -1,5 +1,6 @@
 import json
 import os
+import aiohttp
 
 from discord.roles import Roles
 from discord.members import Members
@@ -146,8 +147,6 @@ async def delete_channel(channel_name: str, guild_id: str, author_id: str) -> st
 async def rename_channel(guild_id: str, channel_name: str, new_name: str, message_author_id: str) -> str:
     """Renames a channel. Input should be a string with the channel's name and a string with the new name."""
 
-    print("renaming channel...")
-
     member = await Members.get_member(guild_id, message_author_id)
     roles = await Roles.get_roles(guild_id)
     guild = await Guilds.get_guild(guild_id)
@@ -274,8 +273,18 @@ async def get_server_interaction_count(guild_id: str) -> int:
     interactions = get_guild_interaction_count(guild_id)
     return interactions
 
-async def generate_image_from_prompt(prompt: str):
-    """Generates an image. Input should be a string with the prompt."""
+async def generate_image_from_prompt(prompt: str, guild_id: str) -> str:
+    """Generates an image. Input should be a string with the prompt. The output should be a string with the image's URL. You should only respond with the image's URL."""
 
-    output_path = os.path.join(os.getcwd(), "result.png")
+    output_path = os.path.join(os.getcwd(), f"result_{guild_id}.png")
     generate_image(prompt, output_path)
+
+    with open(output_path, "rb") as image_file:
+        async with aiohttp.ClientSession() as session:
+            async with session.post(f"https://vesperbot.ai/api/user/servers/{guild_id}/images", data={ "file": image_file }) as response:
+                if response.status >= 400:
+                    raise VesperException(await response.text())
+
+                result = await response.json()
+
+                return result["url"]
