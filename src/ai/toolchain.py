@@ -9,7 +9,7 @@ from discord.messages import Messages
 from discord.permissions import Permissions
 from discord.guilds import Guilds
 from exception import VesperException
-from data import get_guild_interaction_count
+from data import get_guild_interaction_count, check_guild_premium_status
 from ai.images import generate_image
  
 def get_bot_creator() -> str:
@@ -231,7 +231,7 @@ async def ban_member(member_id: str, reason: str, guild_id: str, author_id: str)
     await Members.ban_member(guild_id, member_id, reason)
     return f":white_check_mark: I have banned <@{member_id}>."
 
-async def unban_member(member_id, guild_id, author_id):
+async def unban_member(member_id: str, guild_id: str, author_id: str) -> str:
     """Unbans a member. Input should be a string with the member's ID."""
     member = await Members.get_member(guild_id, author_id)
     roles = await Roles.get_roles(guild_id)
@@ -275,6 +275,9 @@ async def get_server_interaction_count(guild_id: str) -> int:
 
 async def generate_image_from_prompt(prompt: str, guild_id: str) -> str:
     """Generates an image. Input should be a string with the prompt. The output should be a string with the image's URL. You should only respond with the image's URL."""
+
+    if not check_guild_premium_status(guild_id):
+        raise VesperException(":no_entry_sign: Image generation is only available for premium-enabled servers. Visit the [Management Page](https://vesperbot.ai/manage) to learn more.")
 
     output_path = os.path.join(os.getcwd(), f"result_{guild_id}.png")
     generate_image(prompt, output_path)

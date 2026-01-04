@@ -8,14 +8,10 @@ load_dotenv()
 google_client = genai.Client(api_key=os.getenv("GOOGLE_API_KEY"))
 
 def generate_image(prompt: str, output_path: str) -> Image:
-    print("Generating image...")
-
     response = google_client.models.generate_content(
         model="gemini-2.5-flash-image",
         contents=prompt
     )
-
-    print("Saving generated image...")
 
     for part in response.parts:
         if part.inline_data:

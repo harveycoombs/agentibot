@@ -114,3 +114,11 @@ def get_model_choice(guild_id):
     except Exception as e:
         print(f"Unable to get model choice: {e}")
         return "gpt-5-nano"
+
+def check_guild_premium_status(guild_id):
+    try:
+        response = supabase.table("guilds").select("premium_status").eq("guild_id", guild_id).maybe_single().execute()
+        return response.data["premium"] if response.data else False
+    except Exception as e:
+        print(f"Unable to check guild premium status: {e}")
+        return False

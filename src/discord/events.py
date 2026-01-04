@@ -56,7 +56,6 @@ class Events:
                     await Messages.create_message(channel_id, f"{ve}")
                     return
                 except Exception as e:
-                    print(f"Error: {e}")
                     insert_error_log(guild_id, author_id, event_data["content"], str(e))
                     await Messages.create_message(channel_id, ":bangbang: Something went wrong. Please try again later.")
                     return
