@@ -21,15 +21,29 @@ async def get_server_info(guild_id: str) -> str:
     guild = await Guilds.get_guild(guild_id)
     return json.dumps(guild)
 
-async def add_role(role_name: str, guild_id: str, author_id: str, target_id: str = None) -> str:
-    """Adds a role to another user. Input should be a string with the role's name."""
+async def add_role(role_name: str, guild_id: str, message_author_id: str, target_user_id: str = None) -> str:
+    """Adds a role to another user. Input should be a string with the role's name, a string with the guild's ID, a string with the message author's ID and an optional string with the target user's ID."""
+    guild = await Guilds.get_guild(guild_id)
     roles = await Roles.get_roles(guild_id)
+    author = await Members.get_member(guild_id, message_author_id)
+
+    member_roles = [role for role in roles if role["id"] in author["roles"]]
+
+    if len(member_roles) == 0 and guild["owner_id"] != message_author_id:
+        raise VesperException(":no_entry_sign: You do not have permission to assign roles.")
+
+    for role in member_roles:
+        if Permissions.has_permission(role["permissions_new"], Permissions.MANAGE_ROLES) or guild["owner_id"] == message_author_id:
+            break
+        else:
+            raise VesperException(":no_entry_sign: You do not have permission to assign roles.")
+
     role = next((role for role in roles if role["name"].lower() == role_name.lower()), None)
 
     if role is None:
         raise VesperException(":warning: The provided role does not exist.")
     
-    await Roles.add_role_to_user(guild_id, author_id if target_id is None else target_id, role["id"])
+    await Roles.add_role_to_user(guild_id, message_author_id if target_user_id is None else target_user_id, role["id"])
     return f":white_check_mark: I have added the '{role_name}' role."
 
 async def remove_role(role_name: str, guild_id: str, author_id: str, target_id: str = None) -> str:
