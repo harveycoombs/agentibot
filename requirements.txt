@@ -6,4 +6,6 @@ supabase
 python-dotenv
 google
 google-generativeai
+google-genai
+google-api-python-client
 pillow
