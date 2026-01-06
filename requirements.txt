@@ -5,4 +5,5 @@ redis
 supabase
 python-dotenv
 google
+google-generativeai
 pillow
