@@ -305,3 +305,23 @@ async def generate_image_from_prompt(prompt: str, guild_id: str) -> str:
                 result = await response.json()
 
                 return result["url"]
+
+async def create_server_invite(channel_id: str, age: int, temporary: bool, guild_id: str, message_author_id: str) -> str:
+    """Creates a server invite. Input should be a string with the channel's ID, an integer with the age limit in seconds, a boolean with whether the invite is temporary, a string with the guild's ID and a string with the message author's ID."""
+    member = await Members.get_member(guild_id, message_author_id)
+    roles = await Roles.get_roles(guild_id)
+    guild = await Guilds.get_guild(guild_id)
+
+    member_roles = [role for role in roles if role["id"] in member["roles"]]
+
+    if len(member_roles) == 0 and guild["owner_id"] != message_author_id:
+        raise VesperException(":no_entry_sign: You do not have permission to create channels.")
+
+    for role in member_roles:
+        if Permissions.has_permission(role["permissions_new"], Permissions.CREATE_INSTANT_INVITE) or guild["owner_id"] == message_author_id:
+            break
+        else:
+            raise VesperException(":no_entry_sign: You do not have permission to create invites.")
+
+    invite_code = await Channels.create_invite(channel_id, age, temporary)
+    return f":white_check_mark: I have created an invite for this channel, here is the URL: https://discord.gg/{invite_code}"

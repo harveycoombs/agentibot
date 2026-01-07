@@ -23,8 +23,6 @@ class Channels:
         categories = await Channels.get_channel_categories(guild_id)
         category_id = next(category["id"] for category in categories if category["name"].strip().lower() == category_name.strip().lower()) if category_name else None
 
-        print(category_name, category_id)
-
         try:
             response = await DiscordAPI.post(f"guilds/{guild_id}/channels", {
                 "name": channel_name,
@@ -52,3 +50,14 @@ class Channels:
             await DiscordAPI.delete(f"channels/{channel_id}")
         except Exception:
             raise VesperException(":bangbang: Unable to delete channel.")
+
+    @staticmethod
+    async def create_invite(channel_id, age, temporary):
+        try:
+            invitation = await DiscordAPI.post(f"channels/{channel_id}/invites", {
+                "max_age": age,
+                "temporary": temporary
+            })
+            return invitation["code"]
+        except Exception:
+            raise VesperException(":bangbang: Unable to create channel invite.")

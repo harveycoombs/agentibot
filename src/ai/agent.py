@@ -1,7 +1,7 @@
 import json
 from langchain.agents import create_agent
 
-from ai.toolchain import get_bot_creator, get_server_info, add_role, remove_role, create_role, change_nickname, create_text_channel, create_voice_channel, delete_channel, delete_message, ban_member, unban_member, kick_member, bulk_delete_messages, rename_channel, get_server_interaction_count, generate_image_from_prompt
+from ai.toolchain import get_bot_creator, get_server_info, add_role, remove_role, create_role, change_nickname, create_text_channel, create_voice_channel, delete_channel, delete_message, ban_member, unban_member, kick_member, bulk_delete_messages, rename_channel, get_server_interaction_count, generate_image_from_prompt, create_server_invite
 
 class Agent:
     def __init__(self, context: dict, model: str):
@@ -10,7 +10,7 @@ class Agent:
 
         self.agent = create_agent(
             model=self.model,
-            tools=[get_bot_creator, get_server_info, add_role, remove_role, create_role, change_nickname, create_text_channel, create_voice_channel, delete_channel, delete_message, ban_member, unban_member, kick_member, bulk_delete_messages, rename_channel, get_server_interaction_count, generate_image_from_prompt],
+            tools=[get_bot_creator, get_server_info, add_role, remove_role, create_role, change_nickname, create_text_channel, create_voice_channel, delete_channel, delete_message, ban_member, unban_member, kick_member, bulk_delete_messages, rename_channel, get_server_interaction_count, generate_image_from_prompt, create_server_invite],
             system_prompt=f"You are Vesper, a helpful assistant that decides which tool is most appropriate to use based on the user's prompt, using both the user's prompt and the following data as parameters for each tool: {json.dumps(self.context)}"
         )
 
