@@ -61,3 +61,10 @@ class Channels:
             return invitation["code"]
         except Exception:
             raise VesperException(":bangbang: Unable to create channel invite.")
+
+    @staticmethod
+    async def delete_invite(channel_id, invite_code):
+        try:
+            await DiscordAPI.delete(f"channels/{channel_id}/invites/{invite_code}")
+        except Exception:
+            raise VesperException(":bangbang: Unable to delete channel invite.")
