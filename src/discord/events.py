@@ -82,7 +82,7 @@ class Events:
                                 "type": 2,
                                 "label": "Website",
                                 "style": 5,
-                                "url": "https://vesperbot.ai"
+                                "url": "https://www.vesperbot.ai"
                             }
                         ]
                     }])
