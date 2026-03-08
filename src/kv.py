@@ -1,8 +1,5 @@
 import os
 import redis
-from dotenv import load_dotenv
-
-load_dotenv()
 
 rc = redis.Redis(host=os.getenv("REDIS_HOST"), port=os.getenv("REDIS_PORT"), db=0)
 

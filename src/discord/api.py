@@ -1,10 +1,7 @@
 import os
 import aiohttp
-from dotenv import load_dotenv
 
 from exception import VesperException
-
-load_dotenv()
 
 class DiscordAPI:
     BASE_URL = "https://discord.com/api/"

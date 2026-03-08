@@ -1,6 +1,9 @@
 # Vesper ~ vesperbot.ai ~ Written by Harvey Coombs ~ 2020-2024
 import asyncio
 from discord.gateway import Gateway
+from dotenv import load_dotenv
+
+load_dotenv()
 
 async def main():
     while True:

@@ -1,7 +1,4 @@
 import fal_client
-from dotenv import load_dotenv
-
-load_dotenv()
 
 def on_queue_update(update):
     if isinstance(update, fal_client.InProgress):

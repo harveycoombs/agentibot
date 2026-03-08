@@ -1,11 +1,8 @@
 import os
 import asyncio
-from dotenv import load_dotenv
 
 from discord.api import DiscordAPI
 from exception import VesperException
-
-load_dotenv()
 
 class Messages:
     embed_color = os.getenv("EMBED_COLOR")

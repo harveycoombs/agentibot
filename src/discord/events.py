@@ -1,14 +1,13 @@
 import os
 import json
-from dotenv import load_dotenv
 
 from data import get_guild_interaction_count, set_guild_interaction_count, check_guild_interaction_limit_hit, register_guild, guild_is_registered, insert_error_log, update_registered_guild_owner, get_model_choice
 from kv import get_kv, set_kv
 from discord.messages import Messages
 from ai.agent import Agent
 from exception import VesperException
-
-load_dotenv()
+from discord.guilds import Guilds
+from discord.utils import Utils
 
 class Events:
     @staticmethod
@@ -96,4 +95,58 @@ class Events:
             
             case "GUILD_DELETE":
                 set_kv("guild_count", get_kv("guild_count") - 1)
+                return
+
+            case "GUILD_MEMBER_REMOVE":
+                member = event_data["user"]
+
+                guild = await Guilds.get_guild(event_data["guild_id"])
+                system_channel_id = guild["system_channel_id"]
+
+                avatar_url = f"https://cdn.discordapp.com/avatars/{member['id']}/{member['avatar']}.webp"
+                creation_date = Utils.snowflake_to_datetime(int(member["id"]))
+
+                await Messages.create_message(system_channel_id, None, [{
+                    "title": f":outbox_tray: {member['global_name']} left the server",
+                    "description": f"Joined Discord on `{creation_date}`",
+                    "author": {
+                        "name": member["username"] or "Unknown User",
+                        "icon_url": avatar_url
+                    },
+                    "thumbnail": {
+                        "url": avatar_url
+                    },
+                    "footer": {
+                        "text": f"{guild['name']} now has {guild['approximate_member_count'] or "?"} members",
+                        "icon_url": f"https://cdn.discordapp.com/icons/{guild['id']}/{guild['icon']}.webp"
+                    },
+                    "color": Messages.embed_color
+                }])
+                return
+
+            case "GUILD_MEMBER_ADD":
+                member = event_data["user"]
+
+                guild = await Guilds.get_guild(event_data["guild_id"])
+                system_channel_id = guild["system_channel_id"]
+
+                avatar_url = f"https://cdn.discordapp.com/avatars/{member['id']}/{member['avatar']}.webp"
+                creation_date = Utils.snowflake_to_datetime(int(member["id"]))
+
+                await Messages.create_message(system_channel_id, None, [{
+                    "title": f":inbox_tray: {member['global_name']} joined the server",
+                    "description": f"Joined Discord on `{creation_date}`",
+                    "author": {
+                        "name": member["username"] or "Unknown User",
+                        "icon_url": avatar_url
+                    },
+                    "thumbnail": {
+                        "url": avatar_url
+                    },
+                    "footer": {
+                        "text": f"{guild['name']} now has {guild['approximate_member_count'] or "?"} members",
+                        "icon_url": f"https://cdn.discordapp.com/icons/{guild['id']}/{guild['icon']}.webp"
+                    },
+                    "color": Messages.embed_color
+                }])
                 return

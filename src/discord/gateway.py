@@ -2,12 +2,9 @@ import os
 import websockets
 import asyncio
 import json
-from dotenv import load_dotenv
 
 from discord.api import DiscordAPI
 from discord.events import Events
-
-load_dotenv()
 
 class Gateway:
     heartbeat = { "d": None, "op": 1 }

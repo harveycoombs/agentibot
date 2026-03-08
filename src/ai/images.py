@@ -1,9 +1,6 @@
 from google import genai
 from PIL import Image
 import os
-from dotenv import load_dotenv
-
-load_dotenv()
 
 google_client = genai.Client(api_key=os.getenv("GOOGLE_API_KEY"))
 
