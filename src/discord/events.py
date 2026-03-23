@@ -36,7 +36,7 @@ class Events:
 
                 await Messages.create_message("1366128921048907776", None, [{
                     "title": ":scroll: Rules",
-                    "description": f"- No NSFW content\n- No harassment or bullying\n- No solicitation\n- No spamming\nNo ToS-breaking content",
+                    "description": f"- No NSFW content\n- No harassment or bullying\n- No self-promotion\n- No spamming\n- No ToS-breaking content",
                     "color": Messages.embed_color
                 }])
                 return
