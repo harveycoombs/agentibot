@@ -21,6 +21,24 @@ class Events:
             case "READY":
                 set_kv("guild_count", len(event_data["guilds"]))
                 print(f"Vesper is ready in {len(event_data['guilds'])} guilds.")
+
+                await Messages.create_message("1366128921048907776", None, [{
+                    "title": ":wave: Thank you for joining the official Vesper Discord server",
+                    "description": "Please read the rules below before continuing",
+                    "color": Messages.embed_color,
+                    "thumbnail": {
+                        "url": "https://www.vesperbot.ai/images/discord-splash.jpg"
+                    },
+                    "footer": {
+                        "text": "Enjoy your stay!",
+                    }
+                }])
+
+                await Messages.create_message("1366128921048907776", None, [{
+                    "title": ":scroll: Rules",
+                    "description": f"- No NSFW content\n- No harassment or bullying\n- No solicitation\n- No spamming\nNo ToS-breaking content",
+                    "color": Messages.embed_color
+                }])
                 return
 
             case "MESSAGE_CREATE":
