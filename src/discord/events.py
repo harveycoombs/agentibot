@@ -26,7 +26,7 @@ class Events:
                     "title": ":wave: Thank you for joining the official Vesper Discord server",
                     "description": "Please read the rules below before continuing",
                     "color": Messages.embed_color,
-                    "thumbnail": {
+                    "image": {
                         "url": "https://www.vesperbot.ai/images/discord-splash.jpg"
                     },
                     "footer": {
