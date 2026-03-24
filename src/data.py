@@ -91,29 +91,29 @@ def get_model_choice(guild_id):
 
         if guild_response["error"]:
             print(f"Unable to get guild owner_id: {guild_response['error']['message']}")
-            return "gpt-5-nano"
+            return "gpt-5.4-nano"
 
         guild_data = guild_response.data
         owner_id = guild_data["owner_id"] if guild_data else None
 
         if not owner_id:
-            return "gpt-5-nano"
+            return "gpt-5.4-nano"
 
         user_response = supabase.table("users").select("model").eq("user_id", owner_id).maybe_single().execute()
 
         if user_response["error"]:
             print(f"Unable to get user model: {user_response['error']['message']}")
-            return "gpt-5-nano"
+            return "gpt-5.4-nano"
 
         user_data = user_response.data
 
         if not user_data or user_data["model"] is None:
-            return "gpt-5-nano"
+            return "gpt-5.4-nano"
 
         return user_data["model"]
     except Exception as e:
         print(f"Unable to get model choice: {e}")
-        return "gpt-5-nano"
+        return "gpt-5.4-nano"
 
 def check_guild_premium_status(guild_id):
     try:
