@@ -44,7 +44,7 @@ class Events:
 
                 try:
                     agent = Agent(context=event_data, model=model)
-                    response = await agent.respond(event_data["content"].replace(f"<@!{os.getenv('APPLICATION_ID')}>", ""))
+                    response = await agent.respond(event_data["content"].replace(f"<@!{os.getenv('APPLICATION_ID')}>", "").strip())
 
                     if len(response) > 2000:
                         for x in range(0, len(response), 2000):
@@ -72,7 +72,7 @@ class Events:
 
                     await Messages.create_message(system_channel_id, None, [{
                         "title": ":wave: Thank you for inviting me to your server!",
-                        "description": "Check out the [Documentation](https://harvey-coombs-1.gitbook.io/vesper) to get started.",
+                        "description": "Check out the [About page](https://www.vesperbot.ai/about) to get started.",
                         "color": Messages.embed_color
                     }], [{
                         "type": 1,

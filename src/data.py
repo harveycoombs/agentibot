@@ -72,6 +72,8 @@ def guild_is_registered(guild_id):
         return False
 
 def insert_error_log(guild_id, author_id, prompt, error_message):
+    print(f"ERR: {error_message}")
+
     try:
         response = supabase.table("errors").insert({
             "incident_date": datetime.now().isoformat(),
@@ -88,26 +90,22 @@ def insert_error_log(guild_id, author_id, prompt, error_message):
 def get_model_choice(guild_id):
     try:
         guild_response = supabase.table("guilds").select("owner_id").eq("guild_id", guild_id).maybe_single().execute()
+        guild_data = guild_response.data
 
-        if guild_response["error"]:
-            print(f"Unable to get guild owner_id: {guild_response['error']['message']}")
+        if not guild_data:
+            print("Unable to get guild owner_id")
             return "gpt-5.4-nano"
 
-        guild_data = guild_response.data
         owner_id = guild_data["owner_id"] if guild_data else None
 
         if not owner_id:
             return "gpt-5.4-nano"
 
         user_response = supabase.table("users").select("model").eq("user_id", owner_id).maybe_single().execute()
-
-        if user_response["error"]:
-            print(f"Unable to get user model: {user_response['error']['message']}")
-            return "gpt-5.4-nano"
-
         user_data = user_response.data
 
         if not user_data or user_data["model"] is None:
+            print("Unable to get user model")
             return "gpt-5.4-nano"
 
         return user_data["model"]
@@ -117,7 +115,7 @@ def get_model_choice(guild_id):
 
 def check_guild_premium_status(guild_id):
     try:
-        response = supabase.table("guilds").select("premium_status").eq("guild_id", guild_id).maybe_single().execute()
+        response = supabase.table("guilds").select("premium").eq("guild_id", guild_id).maybe_single().execute()
         return response.data["premium"] if response.data else False
     except Exception as e:
         print(f"Unable to check guild premium status: {e}")
