@@ -85,9 +85,9 @@ async def create_role(role_name: str, role_color: str, guild_id: str, author_id:
     await Roles.create_role(guild_id, safe_role_name, int(color_hex, 16))
     return f":white_check_mark: I have created the '{safe_role_name}' role."
 
-async def change_nickname(nickname: str, guild_id: str, author_id: str) -> str:
-    """Changes the nickname of a user. Input should be a string with the new nickname."""
-    await Members.update_member(guild_id, author_id, nickname)
+async def change_nickname(nickname: str, guild_id: str, target_user_id: str) -> str:
+    """Changes the nickname of a user. Input should be a string with the new nickname and a string with the target user's ID."""
+    await Members.update_member(guild_id, target_user_id, nickname)
     return f":white_check_mark: I have changed your nickname to '{nickname}'."
 
 async def create_text_channel(channel_name: str, guild_id: str, message_author_id: str, category_name: str = None) -> str:
