@@ -24,7 +24,8 @@ class Messages:
                 "embeds": embeds or [],
                 "components": components or []
             })
-        except Exception:
+        except Exception as e:
+            print(e)
             raise VesperException(":bangbang: Unable to create message.")
 
     @staticmethod
