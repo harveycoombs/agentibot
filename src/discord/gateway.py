@@ -12,7 +12,7 @@ class Gateway:
     identity = {
         "d": {
             "token": os.getenv("TOKEN"),
-            "intents": 513,
+            "intents": 515,
             "properties": { "$os": "linux" }
         },
         "op": 2

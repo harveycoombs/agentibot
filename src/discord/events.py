@@ -56,7 +56,7 @@ class Events:
                     return
                 except Exception as e:
                     insert_error_log(guild_id, author_id, event_data["content"], str(e))
-                    await Messages.create_message(channel_id, ":bangbang: Something went wrong. Please try again later.")
+                    await Messages.create_message(channel_id, ":bangbang: Something went wrong. If this issue persists, [Contact Support](https://www.vesperbot.ai/contact) for further assistance.")
                     return
                 
             case "GUILD_CREATE":
