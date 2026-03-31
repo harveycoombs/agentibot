@@ -18,7 +18,9 @@ class DiscordAPI:
 
         async with aiohttp.ClientSession() as session:
             async with session.get(f"{DiscordAPI.BASE_URL}{endpoint}", headers=headers) as response:
-                if response.status >= 400:
+                if response.status == 429:
+                    raise VesperException(":warning: You are being rate limited. Please try again later.")
+                elif response.status >= 400:
                     raise VesperException(await response.text())
 
                 try:
