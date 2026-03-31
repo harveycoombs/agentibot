@@ -26,7 +26,7 @@ class Messages:
             })
         except Exception as e:
             print(e)
-            raise VesperException(":bangbang: Unable to create message.")
+            raise VesperException(f":bangbang: Unable to create message ({e}).")
 
     @staticmethod
     async def update_message(channel_id, message_id, content=None, embeds=None):
