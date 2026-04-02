@@ -52,7 +52,7 @@ class Events:
                     else:
                         await Messages.create_message(channel_id, response)
                 except VesperException as ve:
-                    await Messages.create_message(channel_id, f"{ve}")
+                    await Messages.create_message(channel_id, str(ve))
                     return
                 except Exception as e:
                     insert_error_log(guild_id, author_id, event_data["content"], str(e))
