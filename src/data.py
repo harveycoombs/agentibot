@@ -20,6 +20,14 @@ def register_guild(guild_id, owner_id):
     except Exception as e:
         print(f"Unable to register guild: {e}")
 
+def get_registered_guild_owner(guild_id):
+    try:
+        response = supabase.table("guilds").select("owner_id").eq("guild_id", guild_id).maybe_single().execute()
+        return response.data["owner_id"] if response.data else None
+    except Exception as e:
+        print(f"Unable to get registered guild owner: {e}")
+        return None
+
 def update_registered_guild_owner(guild_id, owner_id):
     try:
         supabase.table("guilds").update({ "owner_id": owner_id }).eq("guild_id", guild_id).execute()
@@ -40,6 +48,27 @@ def set_guild_interaction_count(guild_id, count):
     except Exception as e:
         print(f"Unable to set guild interaction count: {e}")
 
+def get_stripe_customer_id(guild_id):
+    try:
+        owner_id = get_registered_guild_owner(guild_id)
+
+        if not owner_id:
+            return None
+
+        user_response = supabase.table("users").select("stripe_customer_id").eq("user_id", owner_id).maybe_single().execute()
+        user_data = user_response.data
+
+        if not user_data or user_data["stripe_customer_id"] is None:
+            return None
+
+        return user_data["stripe_customer_id"]
+    except Exception as e:
+        print(f"Unable to get Stripe customer ID: {e}")
+        return None
+
+def get_guild_interaction_limit(guild_id):
+    return 200
+
 def check_guild_interaction_limit_hit(guild_id):
     try:
         response = supabase.table("guilds").select("interactions_this_month, interaction_start_date").eq("guild_id", guild_id).maybe_single().execute()
@@ -55,7 +84,9 @@ def check_guild_interaction_limit_hit(guild_id):
         now = datetime.now()
         one_month_ago = now - timedelta(days=30)
 
-        if (interactions_this_month >= 200 and interaction_start_date >= one_month_ago):
+        interaction_limit = get_guild_interaction_limit(guild_id)
+
+        if (interactions_this_month >= interaction_limit and interaction_start_date >= one_month_ago):
             return True
 
         return False
