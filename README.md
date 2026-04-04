@@ -36,6 +36,6 @@ Once inside the virtual environment, run the command `pip install -r requirement
 ### 4. Running Vesper
 Once you have completed the above, run `python src/vesper.py` from the project root to start.
 
-Thank you for using Vesper! Please consider donating by [clicking here](https://www.vesperbot.ai/donate).
+Thank you for using Vesper! Please consider donating by [clicking here](https://buymeacoffee.com/harveycoombs).
 
 &ndash; [Harvey Coombs](https://www.harveycoombs.com/)
