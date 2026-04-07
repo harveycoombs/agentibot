@@ -2,7 +2,8 @@ import json
 from langchain.agents import create_agent
 from langchain_openai import ChatOpenAI
 from langchain_xai import ChatXAI
-#from langchain_google_genai import ChatGoogleGenerativeAI
+from langchain_google_genai import ChatGoogleGenerativeAI
+from langchain_anthropic import ChatAnthropic
 
 from ai.toolchain import get_bot_creator, get_server_info, add_role, remove_role, create_role, change_nickname, create_text_channel, create_voice_channel, delete_channel, delete_message, ban_member, unban_member, kick_member, bulk_delete_messages, rename_channel, get_server_interaction_count, generate_image_from_prompt, create_server_invite, delete_server_invite, update_server
 
@@ -14,8 +15,10 @@ class Agent:
             self.model = ChatOpenAI(model=model, max_tokens=120)
         elif model.startswith("grok-"):
             self.model = ChatXAI(model=model, max_tokens=120)
-        #elif model.startswith("gemini-"):
-        #    self.model = ChatGoogleGenerativeAI(model=model, max_tokens=120)
+        elif model.startswith("gemini-"):
+            self.model = ChatGoogleGenerativeAI(model=model, max_tokens=120)
+        elif model.startswith("claude-"):
+            self.model = ChatAnthropic(model=model, max_tokens=120)
         else:
             self.model = model
 
