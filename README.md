@@ -5,7 +5,7 @@
 Vesper is an agentic AI Discord bot.
 
 ## Purpose
-Vesper can manage just about any aspect of your server. From moderation to server customisation, Vesper makes the perfect moderator or administrator. As for how to use Vesper, simply ask it to do something (examples: 'Give me the Green role', 'Create a channel called gaming and make it private to the gaming role'), and it will oblige.
+Vesper can manage just about any aspect of your server. From moderation to server customisation, Vesper makes the perfect moderator or administrator. As for how to use Vesper, simply ask it to do something (examples: `Give me the Green role`, `Create a channel called gaming and make it private to the gaming role`), and it will oblige.
 
 ## Setup
 If you wish to run Vesper yourself, follow the instructions below.
