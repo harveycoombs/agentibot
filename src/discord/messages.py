@@ -8,9 +8,9 @@ class Messages:
     embed_color = os.getenv("EMBED_COLOR")
 
     @staticmethod
-    async def get_messages(channel_id):
+    async def get_messages(channel_id: str, limit: int = 50):
         try:
-            messages = await DiscordAPI.get(f"channels/{channel_id}/messages")
+            messages = await DiscordAPI.get(f"channels/{channel_id}/messages?limit={limit}")
             return messages
         except Exception:
             raise VesperException(":bangbang: Unable to retrieve messages.")

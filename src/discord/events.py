@@ -66,7 +66,7 @@ class Events:
                 if not guild_is_registered(guild_id):
                     register_guild(guild_id, owner_id)
 
-                    system_channel_id = event_data["system_channel_id"]         
+                    system_channel_id = event_data["system_channel_id"]
 
                     set_kv("guild_count", get_kv("guild_count") + 1)
 

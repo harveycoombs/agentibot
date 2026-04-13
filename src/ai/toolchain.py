@@ -369,3 +369,15 @@ async def update_server(guild_id: str, message_author_id: str, name: str = None,
     })
     
     return f":white_check_mark: I have updated the server."
+
+async def summarise_channel_messages(channel_id: str, limit: int = 50) -> str:
+    """Retrieves a list of the most recent messages in a specified channel, for use when generating a concise summary in the form of a paragraph. Input should be a string with the channel's ID and an optional integer with the number of messages to retrieve."""
+    messages = await Messages.get_messages(channel_id, limit)
+
+    clean_messages = list(map(lambda message: {
+        "content": message["content"],
+        "author": message["author"]["username"],
+        "timestamp": message["timestamp"]
+    }, messages))
+
+    return json.dumps(clean_messages)
