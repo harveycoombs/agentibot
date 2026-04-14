@@ -1,4 +1,4 @@
-<p align="center"><img src="https://www.vesperbot.ai/images/icon.png" width="105" /></p>
+<p align="center"><img src="https://www.vesperbot.ai/images/icon.png?v=2" width="105" /></p>
 
 # Vesper &middot; [vesperbot.ai]([https://www.vesperbot.ai/](https://vesperbot.ai/))
 
