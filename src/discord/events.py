@@ -8,6 +8,7 @@ from ai.agent import Agent
 from exception import VesperException
 from discord.guilds import Guilds
 from discord.utils import Utils
+from ai.direct import generate_response_to_image
 
 class Events:
     @staticmethod
@@ -43,6 +44,11 @@ class Events:
                 set_guild_interaction_count(guild_id, interaction_count + 1)
 
                 try:
+                    if len(event_data["attachments"]) > 0:
+                        response = generate_response_to_image(model, event_data["content"].replace(f"<@!{os.getenv('APPLICATION_ID')}>", "").strip(), event_data["attachments"][0]["url"])
+                        await Messages.create_message(channel_id, response[:2000])
+                        return
+
                     agent = Agent(context=event_data, model=model)
                     response = await agent.respond(event_data["content"].replace(f"<@!{os.getenv('APPLICATION_ID')}>", "").strip())
 
