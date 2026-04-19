@@ -134,7 +134,7 @@ class Events:
                 creation_date = Utils.snowflake_to_datetime(int(member["id"]))
 
                 await Messages.create_message(system_channel_id, None, [{
-                    "title": f":inbox_tray: {member['global_name']} joined the server",
+                    "title": f":inbox_tray: {member['global_name'] or member['username']} joined the server",
                     "description": f"Joined Discord on `{creation_date}`",
                     "author": {
                         "name": member["username"] or "Unknown User",
