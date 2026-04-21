@@ -375,7 +375,7 @@ async def summarise_channel_messages(channel_id: str, limit: int = 50) -> str:
     messages = await Messages.get_messages(channel_id, limit)
 
     clean_messages = list(map(lambda message: {
-        "content": message["content"],
+        "content": f"{message['content'][:200]} ... {message['content'][-50:]}" if len(message["content"]) > 250 else message["content"],
         "author": message["author"]["username"],
         "timestamp": message["timestamp"]
     }, messages))
