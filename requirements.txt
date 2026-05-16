@@ -10,3 +10,4 @@ google-genai
 google-api-python-client
 pillow
 fal-client
+stripe
