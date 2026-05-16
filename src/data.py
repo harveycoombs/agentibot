@@ -1,11 +1,14 @@
 import os
+import json
 from datetime import datetime
 from supabase import create_client, Client
 from datetime import datetime, timedelta
 from dotenv import load_dotenv
+from stripe import StripeClient
 
 load_dotenv()
 
+stripe_client = StripeClient(os.getenv("STRIPE_SECRET_KEY"))
 supabase: Client = create_client(os.getenv("SUPABASE_URL"), os.getenv("SUPABASE_KEY"))
 
 def register_guild(guild_id, owner_id):
@@ -48,6 +51,14 @@ def set_guild_interaction_count(guild_id, count):
     except Exception as e:
         print(f"Unable to set guild interaction count: {e}")
 
+def get_stripe_subscription_id(owner_id):
+    try:
+        response = supabase.table("users").select("stripe_subscription_id").eq("user_id", owner_id).maybe_single().execute()
+        return response.data["stripe_subscription_id"] if response.data else None
+    except Exception as e:
+        print(f"Unable to get stripe subscription ID: {e}")
+        return None
+
 def get_stripe_customer_id(guild_id):
     try:
         owner_id = get_registered_guild_owner(guild_id)
@@ -67,7 +78,20 @@ def get_stripe_customer_id(guild_id):
         return None
 
 def get_guild_interaction_limit(guild_id):
-    return 200
+    try:
+        owner_id = get_registered_guild_owner(guild_id)
+        subscription_id = get_stripe_subscription_id(owner_id)
+
+        if not subscription_id:
+            return 200
+
+        subscription = stripe_client.v1.subscriptions.retrieve(subscription_id)
+        plan = json.loads(subscription["plan"]["metadata"]["features"])
+
+        return plan['interactions'] or 200
+    except Exception as e:
+        print(f"Unable to get guild interaction limit: {e}")
+        return 200
 
 def check_guild_interaction_limit_hit(guild_id):
     try:
