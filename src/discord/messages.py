@@ -17,6 +17,8 @@ class Messages:
 
     @staticmethod    
     async def create_message(channel_id, content, embeds=None, components=None):
+        print(f"content: {content}")
+
         if not content and not embeds:
             content = "Sorry, I didn't understand that. Please try again or [Contact Support](https://www.vesperbot.ai/contact) if this issue persists."
 
