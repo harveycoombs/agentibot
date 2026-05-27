@@ -88,6 +88,12 @@ class Events:
                                 "label": "Website",
                                 "style": 5,
                                 "url": "https://www.vesperbot.ai"
+                            },
+                            {
+                                "type": 2,
+                                "label": "Donate",
+                                "style": 5,
+                                "url": "https://buymeacoffee.com/harveycoombs"
                             }
                         ]
                     }])

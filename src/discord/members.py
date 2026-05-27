@@ -22,13 +22,9 @@ class Members:
     
     @staticmethod
     async def update_member(guild_id, user_id, nickname):
-        try:
-            await DiscordAPI.patch(f"guilds/{guild_id}/members/{user_id}", {
-                "nick": nickname
-            })
-        except Exception as ex:
-            print(ex)
-            raise VesperException(":bangbang: Unable to update member.")
+        await DiscordAPI.patch(f"guilds/{guild_id}/members/{user_id}", {
+            "nick": nickname
+        })
     
     @staticmethod
     async def remove_member(guild_id, user_id):
