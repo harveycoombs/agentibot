@@ -1,7 +1,7 @@
 import os
 from openai import OpenAI
 
-from exception import VesperException
+from exception import AgentiBotException
 
 openai_client = OpenAI()
 xai_client = OpenAI(api_key=os.getenv("XAI_API_KEY"), base_url="https://api.x.ai/v1")
@@ -12,7 +12,7 @@ def generate_response_to_image(model, prompt, attachment_url):
     client = openai_client if model.startswith("gpt-") else xai_client if model.startswith("grok-") else gemini_client if model.startswith("gemini-") else anthropic_client if model.startswith("claude-") else None
 
     if not client:
-        raise VesperException(f"Unable to determine provided model '{model}'.")
+        raise AgentiBotException(f"Unable to determine provided model '{model}'.")
 
     response = client.responses.create(
         model=model,

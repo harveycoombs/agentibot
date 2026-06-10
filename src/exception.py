@@ -1,2 +1,2 @@
-class VesperException(Exception):
+class AgentiBotException(Exception):
     pass

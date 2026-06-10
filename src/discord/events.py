@@ -5,7 +5,7 @@ from data import get_guild_interaction_count, set_guild_interaction_count, check
 from kv import get_kv, set_kv
 from discord.messages import Messages
 from ai.agent import Agent
-from exception import VesperException
+from exception import AgentiBotException
 from discord.guilds import Guilds
 from discord.utils import Utils
 from ai.direct import generate_response_to_image
@@ -21,7 +21,7 @@ class Events:
         match event_type:
             case "READY":
                 set_kv("guild_count", len(event_data["guilds"]))
-                print(f"Vesper is ready in {len(event_data['guilds'])} guilds.")
+                print(f"AgentiBot is ready in {len(event_data['guilds'])} guilds.")
                 return
 
             case "MESSAGE_CREATE":
@@ -37,7 +37,7 @@ class Events:
                 guild_id = event_data["guild_id"]
 
                 if check_guild_interaction_limit_hit(guild_id):
-                    await Messages.create_message(channel_id, ":warning: You've reached your monthly interaction limit. Visit the [Pricing](https://www.vesperbot.ai/pricing) page to learn more about increasing your limit.")
+                    await Messages.create_message(channel_id, ":warning: You've reached your monthly interaction limit. Visit the [Pricing](https://www.agenti.bot/pricing) page to learn more about increasing your limit.")
                     return
 
                 interaction_count = get_guild_interaction_count(guild_id)
@@ -57,12 +57,12 @@ class Events:
                             await Messages.create_message(channel_id, response[x:x+2000])
                     else:
                         await Messages.create_message(channel_id, response)
-                except VesperException as ve:
+                except AgentiBotException as ve:
                     await Messages.create_message(channel_id, str(ve))
                     return
                 except Exception as e:
                     insert_error_log(guild_id, author_id, event_data["content"], str(e))
-                    await Messages.create_message(channel_id, ":bangbang: Something went wrong. If this issue persists, [Contact Support](https://www.vesperbot.ai/contact) for further assistance.")
+                    await Messages.create_message(channel_id, ":bangbang: Something went wrong. If this issue persists, [Contact Support](https://www.agenti.bot/contact) for further assistance.")
                     return
                 
             case "GUILD_CREATE":
@@ -78,7 +78,7 @@ class Events:
 
                     await Messages.create_message(system_channel_id, None, [{
                         "title": ":wave: Thank you for inviting me to your server!",
-                        "description": "Check out the [About page](https://www.vesperbot.ai/about) to get started.",
+                        "description": "Check out the [About page](https://www.agenti.bot/about) to get started.",
                         "color": Messages.embed_color
                     }], [{
                         "type": 1,
@@ -87,7 +87,7 @@ class Events:
                                 "type": 2,
                                 "label": "Website",
                                 "style": 5,
-                                "url": "https://www.vesperbot.ai"
+                                "url": "https://www.agenti.bot"
                             },
                             {
                                 "type": 2,

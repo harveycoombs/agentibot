@@ -8,7 +8,7 @@ from discord.channels import Channels
 from discord.messages import Messages
 from discord.permissions import Permissions
 from discord.guilds import Guilds
-from exception import VesperException
+from exception import AgentiBotException
 from data import get_guild_interaction_count, check_guild_premium_status
 from ai.images import generate_image
  
@@ -30,18 +30,18 @@ async def add_role(role_name: str, guild_id: str, message_author_id: str, target
     member_roles = [role for role in roles if role["id"] in author["roles"]]
 
     if len(member_roles) == 0 and guild["owner_id"] != message_author_id:
-        raise VesperException(":no_entry_sign: You do not have permission to assign roles.")
+        raise AgentiBotException(":no_entry_sign: You do not have permission to assign roles.")
 
     for role in member_roles:
         if Permissions.has_permission(role["permissions_new"], Permissions.MANAGE_ROLES) or guild["owner_id"] == message_author_id:
             break
         else:
-            raise VesperException(":no_entry_sign: You do not have permission to assign roles.")
+            raise AgentiBotException(":no_entry_sign: You do not have permission to assign roles.")
 
     role = next((role for role in roles if role["name"].lower() == role_name.lower()), None)
 
     if role is None:
-        raise VesperException(":warning: The provided role does not exist.")
+        raise AgentiBotException(":warning: The provided role does not exist.")
     
     await Roles.add_role_to_user(guild_id, message_author_id if target_user_id is None else target_user_id, role["id"])
     return f":white_check_mark: I have added the '{role_name}' role."
@@ -57,7 +57,7 @@ async def remove_role(role_name: str, guild_id: str, author_id: str, target_id: 
         role = None
 
     if role is None:
-        raise VesperException(f":warning: The provided role does not exist.")
+        raise AgentiBotException(f":warning: The provided role does not exist.")
     
     await Roles.remove_role_from_user(guild_id, author_id if target_id is None else target_id, role["id"])
     return f":white_check_mark: I have removed the '{role_name}' role."
@@ -74,13 +74,13 @@ async def create_role(role_name: str, role_color: str, guild_id: str, author_id:
     member_roles = [role for role in roles if role["id"] in member["roles"]]
 
     if len(member_roles) == 0 and guild["owner_id"] != author_id:
-        raise VesperException(":no_entry_sign: You do not have permission to create roles.")
+        raise AgentiBotException(":no_entry_sign: You do not have permission to create roles.")
 
     for role in member_roles:
         if Permissions.has_permission(role["permissions_new"], Permissions.MANAGE_ROLES) or guild["owner_id"] == author_id:
             break
         else:
-            raise VesperException(":no_entry_sign: You do not have permission to create roles.")
+            raise AgentiBotException(":no_entry_sign: You do not have permission to create roles.")
 
     await Roles.create_role(guild_id, safe_role_name, int(color_hex, 16))
     return f":white_check_mark: I have created the '{safe_role_name}' role."
@@ -101,13 +101,13 @@ async def create_text_channel(channel_name: str, guild_id: str, message_author_i
     member_roles = [role for role in roles if role["id"] in member["roles"]]
 
     if len(member_roles) == 0 and guild["owner_id"] != message_author_id:
-        raise VesperException(":no_entry_sign: You do not have permission to create channels.")
+        raise AgentiBotException(":no_entry_sign: You do not have permission to create channels.")
 
     for role in member_roles:
         if Permissions.has_permission(role["permissions_new"], Permissions.MANAGE_CHANNELS) or guild["owner_id"] == message_author_id:
             break
         else:
-            raise VesperException(":no_entry_sign: You do not have permission to create channels.")
+            raise AgentiBotException(":no_entry_sign: You do not have permission to create channels.")
 
     new_channel_id = await Channels.create_channel(guild_id, channel_name, 0, category_name)
     return f":white_check_mark: I have created the <#{new_channel_id}> channel."
@@ -121,13 +121,13 @@ async def create_voice_channel(channel_name: str, guild_id: str, message_author_
     member_roles = [role for role in roles if role["id"] in member["roles"]]
 
     if len(member_roles) == 0 and guild["owner_id"] != message_author_id:
-        raise VesperException(":no_entry_sign: You do not have permission to create channels.")
+        raise AgentiBotException(":no_entry_sign: You do not have permission to create channels.")
 
     for role in member_roles:
         if Permissions.has_permission(role["permissions_new"], Permissions.MANAGE_CHANNELS) or guild["owner_id"] == message_author_id:
             break
         else:
-            raise VesperException(":no_entry_sign: You do not have permission to create channels.")
+            raise AgentiBotException(":no_entry_sign: You do not have permission to create channels.")
         
     new_channel_id = await Channels.create_channel(guild_id, channel_name, 2, category_name)
     return f":white_check_mark: I have created the <#{new_channel_id}> channel."
@@ -141,19 +141,19 @@ async def delete_channel(channel_name: str, guild_id: str, author_id: str) -> st
     member_roles = [role for role in roles if role["id"] in member["roles"]]
 
     if len(member_roles) == 0 and guild["owner_id"] != author_id:
-        raise VesperException(":no_entry_sign: You do not have permission to create channels.")
+        raise AgentiBotException(":no_entry_sign: You do not have permission to create channels.")
 
     for role in member_roles:
         if Permissions.has_permission(role["permissions_new"], Permissions.MANAGE_CHANNELS) or guild["owner_id"] == author_id:
             break
         else:
-            raise VesperException(":no_entry_sign: You do not have permission to delete channels.")
+            raise AgentiBotException(":no_entry_sign: You do not have permission to delete channels.")
         
     channels = await Channels.get_channels(guild_id)
     channel = next((channel for channel in channels if channel["name"].strip().lower() == channel_name.strip().lower()), None)
 
     if channel is None:
-        raise VesperException(f":warning: The provided channel does not exist.")
+        raise AgentiBotException(f":warning: The provided channel does not exist.")
 
     await Channels.delete_channel(channel["id"])
     return f":white_check_mark: I have deleted the '{channel_name}' channel."
@@ -168,19 +168,19 @@ async def rename_channel(guild_id: str, channel_name: str, new_name: str, messag
     member_roles = [role for role in roles if role["id"] in member["roles"]]
 
     if len(member_roles) == 0 and guild["owner_id"] != message_author_id:
-        raise VesperException(":no_entry_sign: You do not have permission to rename channels.")
+        raise AgentiBotException(":no_entry_sign: You do not have permission to rename channels.")
 
     for role in member_roles:
         if Permissions.has_permission(role["permissions_new"], Permissions.MANAGE_CHANNELS) or guild["owner_id"] == message_author_id:
             break
         else:
-            raise VesperException(":no_entry_sign: You do not have permission to rename channels.")
+            raise AgentiBotException(":no_entry_sign: You do not have permission to rename channels.")
 
     channels = await Channels.get_channels(guild_id)
     channel = next((channel for channel in channels if channel["name"].strip().lower() == channel_name.strip().lower()), None)
 
     if channel is None:
-        raise VesperException(f":warning: The provided channel does not exist.")
+        raise AgentiBotException(f":warning: The provided channel does not exist.")
 
     await Channels.rename_channel(channel["id"], new_name)
     return f":white_check_mark: I have renamed the <#{channel['id']}> channel to '{new_name}'."
@@ -194,13 +194,13 @@ async def delete_message(channel_id: str, message_id: str, guild_id: str, author
     member_roles = [role for role in roles if role["id"] in member["roles"]]
 
     if len(member_roles) == 0 and guild["owner_id"] != author_id:
-        raise VesperException(":no_entry_sign: You do not have permission to create channels.")
+        raise AgentiBotException(":no_entry_sign: You do not have permission to create channels.")
 
     for role in member_roles:
         if Permissions.has_permission(role["permissions_new"], Permissions.MANAGE_MESSAGES) or guild["owner_id"] == author_id:
             break
         else:
-            raise VesperException(":no_entry_sign: You do not have permission to delete messages.")
+            raise AgentiBotException(":no_entry_sign: You do not have permission to delete messages.")
         
     await Messages.delete_message(channel_id, message_id)
     return ":white_check_mark: I have deleted the referenced message."
@@ -214,13 +214,13 @@ async def bulk_delete_messages(amount: int, channel_id: str, guild_id: str, auth
     member_roles = [role for role in roles if role["id"] in member["roles"]]
 
     if len(member_roles) == 0 and guild["owner_id"] != author_id:
-        raise VesperException(":no_entry_sign: You do not have permission to create channels.")
+        raise AgentiBotException(":no_entry_sign: You do not have permission to create channels.")
 
     for role in member_roles:
         if Permissions.has_permission(role["permissions_new"], Permissions.MANAGE_MESSAGES) or guild["owner_id"] == author_id:
             break
         else:
-            raise VesperException(":no_entry_sign: You do not have permission to delete messages.")
+            raise AgentiBotException(":no_entry_sign: You do not have permission to delete messages.")
         
     await Messages.bulk_delete_messages(channel_id, amount)
     return f":white_check_mark: I have deleted {amount} messages."
@@ -234,13 +234,13 @@ async def ban_member(member_id: str, reason: str, guild_id: str, author_id: str)
     member_roles = [role for role in roles if role["id"] in member["roles"]]
 
     if len(member_roles) == 0 and guild["owner_id"] != author_id:
-        raise VesperException(":no_entry_sign: You do not have permission to ban members.")
+        raise AgentiBotException(":no_entry_sign: You do not have permission to ban members.")
 
     for role in member_roles:
         if Permissions.has_permission(role["permissions_new"], Permissions.BAN_MEMBERS) or guild["owner_id"] == author_id:
             break
         else:
-            raise VesperException(":no_entry_sign: You do not have permission to ban members.")
+            raise AgentiBotException(":no_entry_sign: You do not have permission to ban members.")
         
     await Members.ban_member(guild_id, member_id, reason)
     return f":white_check_mark: I have banned <@{member_id}>."
@@ -254,7 +254,7 @@ async def unban_member(member_id: str, guild_id: str, author_id: str) -> str:
     member_roles = [role for role in roles if role["id"] in member["roles"]]
 
     if len(member_roles) == 0 and guild["owner_id"] != author_id:
-        raise VesperException(":no_entry_sign: You do not have permission to unban members.")
+        raise AgentiBotException(":no_entry_sign: You do not have permission to unban members.")
 
     for role in member_roles:
         if Permissions.has_permission(role["permissions_new"], Permissions.BAN_MEMBERS) or guild["owner_id"] == author_id:
@@ -271,13 +271,13 @@ async def kick_member(member_id: str, guild_id: str, author_id: str) -> str:
     member_roles = [role for role in roles if role["id"] in member["roles"]]
 
     if len(member_roles) == 0 and guild["owner_id"] != author_id:
-        raise VesperException(":no_entry_sign: You do not have permission to kick members.")
+        raise AgentiBotException(":no_entry_sign: You do not have permission to kick members.")
 
     for role in member_roles:
         if Permissions.has_permission(role["permissions_new"], Permissions.KICK_MEMBERS) or guild["owner_id"] == author_id:
             break
         else:
-            raise VesperException(":no_entry_sign: You do not have permission to kick members.")
+            raise AgentiBotException(":no_entry_sign: You do not have permission to kick members.")
         
     await Members.remove_member(guild_id, member_id)
     return f":white_check_mark: I have kicked <@{member_id}>."
@@ -291,16 +291,16 @@ async def generate_image_from_prompt(prompt: str, guild_id: str) -> str:
     """Generates an image. Input should be a string with the prompt. The output should be a string with the image's URL. You should only respond with the image's URL."""
 
     if not check_guild_premium_status(guild_id):
-        raise VesperException(":no_entry_sign: Image generation is only available for premium-enabled servers. Visit the [Management Page](https://vesperbot.ai/manage) to learn more.")
+        raise AgentiBotException(":no_entry_sign: Image generation is only available for premium-enabled servers. Visit the [Management Page](https://agenti.bot/manage) to learn more.")
 
     output_path = os.path.join(os.getcwd(), f"result_{guild_id}.png")
     generate_image(prompt, output_path)
 
     with open(output_path, "rb") as image_file:
         async with aiohttp.ClientSession() as session:
-            async with session.post(f"https://vesperbot.ai/api/user/servers/{guild_id}/images", data={ "file": image_file }) as response:
+            async with session.post(f"https://agenti.bot/api/user/servers/{guild_id}/images", data={ "file": image_file }) as response:
                 if response.status >= 400:
-                    raise VesperException(await response.text())
+                    raise AgentiBotException(await response.text())
 
                 result = await response.json()
 
@@ -315,13 +315,13 @@ async def create_server_invite(channel_id: str, age: int, temporary: bool, guild
     member_roles = [role for role in roles if role["id"] in member["roles"]]
 
     if len(member_roles) == 0 and guild["owner_id"] != message_author_id:
-        raise VesperException(":no_entry_sign: You do not have permission to create channels.")
+        raise AgentiBotException(":no_entry_sign: You do not have permission to create channels.")
 
     for role in member_roles:
         if Permissions.has_permission(role["permissions_new"], Permissions.CREATE_INSTANT_INVITE) or guild["owner_id"] == message_author_id:
             break
         else:
-            raise VesperException(":no_entry_sign: You do not have permission to create invites.")
+            raise AgentiBotException(":no_entry_sign: You do not have permission to create invites.")
 
     invite_code = await Channels.create_invite(channel_id, age, temporary)
     return f":white_check_mark: I have created an invite for this channel, here is the URL: https://discord.gg/{invite_code}"
@@ -335,13 +335,13 @@ async def delete_server_invite(invite_code: str, channel_id: str, guild_id: str,
     member_roles = [role for role in roles if role["id"] in member["roles"]]
 
     if len(member_roles) == 0 and guild["owner_id"] != message_author_id:
-        raise VesperException(":no_entry_sign: You do not have permission to create channels.")
+        raise AgentiBotException(":no_entry_sign: You do not have permission to create channels.")
 
     for role in member_roles:
         if Permissions.has_permission(role["permissions_new"], Permissions.CREATE_INSTANT_INVITE) or guild["owner_id"] == message_author_id:
             break
         else:
-            raise VesperException(":no_entry_sign: You do not have permission to create invites.")
+            raise AgentiBotException(":no_entry_sign: You do not have permission to create invites.")
 
     await Channels.delete_invite(channel_id, invite_code)
     return f":white_check_mark: I have deleted the invite '{invite_code}' for this channel."
@@ -355,13 +355,13 @@ async def update_server(guild_id: str, message_author_id: str, name: str = None,
     member_roles = [role for role in roles if role["id"] in member["roles"]]
 
     if len(member_roles) == 0 and guild["owner_id"] != message_author_id:
-        raise VesperException(":no_entry_sign: You do not have permission to update the server.")
+        raise AgentiBotException(":no_entry_sign: You do not have permission to update the server.")
 
     for role in member_roles:
         if Permissions.has_permission(role["permissions_new"], Permissions.MANAGE_GUILD) or guild["owner_id"] == message_author_id:
             break
         else:
-            raise VesperException(":no_entry_sign: You do not have permission to update the server.")
+            raise AgentiBotException(":no_entry_sign: You do not have permission to update the server.")
 
     await Guilds.update_guild(guild_id, {
         "name": name,
