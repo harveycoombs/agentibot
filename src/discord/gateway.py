@@ -23,7 +23,7 @@ class Gateway:
             "status": "online",
             'activities': [
                 {
-                    "name": "vesperbot.ai",
+                    "name": "agenti.bot",
                     "type": 2
                 }
             ],

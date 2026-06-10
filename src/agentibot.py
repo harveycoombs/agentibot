@@ -1,4 +1,4 @@
-# Vesper ~ vesperbot.ai ~ developed by Harvey Coombs ~ 2020-2026
+# AgentiBot ~ agenti.bot ~ developed by Harvey Coombs ~ 2020-2026
 import asyncio
 from discord.gateway import Gateway
 

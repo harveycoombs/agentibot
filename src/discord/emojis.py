@@ -1,7 +1,7 @@
 import base64
 
 from discord.api import DiscordAPI
-from exception import VesperException
+from exception import AgentiBotException
 
 class Emojis:
     @staticmethod
@@ -12,4 +12,4 @@ class Emojis:
                 "image": base64.b64encode(data).decode("utf-8")
             })
         except Exception:
-            raise VesperException(":bangbang: Unable to create emoji.")
+            raise AgentiBotException(":bangbang: Unable to create emoji.")

@@ -1,4 +1,4 @@
-name: Deploy Vesper
+name: Deploy AgentiBot
 
 on:
   push:
@@ -23,7 +23,7 @@ jobs:
             set -e
 
             echo "Navigating to app directory"
-            cd /srv/vesper
+            cd /srv/agentibot
 
             echo "Pulling latest changes"
             git fetch origin
@@ -37,6 +37,6 @@ jobs:
             pip install -r requirements.txt
 
             echo "Restarting service"
-            sudo systemctl restart vesper
+            sudo systemctl restart agentibot
 
             echo "DEPLOYMENT COMPLETE!"

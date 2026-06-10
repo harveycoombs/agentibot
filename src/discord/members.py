@@ -1,5 +1,5 @@
 from discord.api import DiscordAPI
-from exception import VesperException
+from exception import AgentiBotException
 
 class Members:
     @staticmethod
@@ -9,7 +9,7 @@ class Members:
             return members
         except Exception as ex:
             print(ex)
-            raise VesperException(":bangbang: Unable to retrieve members.")
+            raise AgentiBotException(":bangbang: Unable to retrieve members.")
         
     @staticmethod
     async def get_member(guild_id, user_id):
@@ -18,7 +18,7 @@ class Members:
             return member
         except Exception as ex:
             print(ex)
-            raise VesperException(":bangbang: Unable to retrieve member.")
+            raise AgentiBotException(":bangbang: Unable to retrieve member.")
     
     @staticmethod
     async def update_member(guild_id, user_id, nickname):
@@ -32,7 +32,7 @@ class Members:
             await DiscordAPI.delete(f"guilds/{guild_id}/members/{user_id}")
         except Exception as ex:
             print(ex)
-            raise VesperException(":bangbang: Unable to remove member.")
+            raise AgentiBotException(":bangbang: Unable to remove member.")
 
     @staticmethod
     async def ban_member(guild_id, user_id, reason):
@@ -42,7 +42,7 @@ class Members:
             })
         except Exception as ex:
             print(ex)
-            raise VesperException(":bangbang: Unable to ban member.")
+            raise AgentiBotException(":bangbang: Unable to ban member.")
 
     @staticmethod
     async def unban_member(guild_id, user_id):
@@ -50,4 +50,4 @@ class Members:
             await DiscordAPI.delete(f"guilds/{guild_id}/bans/{user_id}")
         except Exception as ex:
             print(ex)
-            raise VesperException(":bangbang: Unable to unban member.")
+            raise AgentiBotException(":bangbang: Unable to unban member.")
