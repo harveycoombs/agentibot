@@ -1,6 +1,6 @@
 <p align="center"><img src="https://www.agenti.bot/images/icon.png?v=2" width="105" /></p>
 
-# AgentiBot &middot; [agenti.bot]([https://www.agenti.bot/](https://agenti.bot/))
+# AgentiBot &middot; [agenti.bot]([https://www.agenti.bot/](https://www.agenti.bot/))
 
 AgentiBot is an agentic AI Discord bot.
 
@@ -28,7 +28,7 @@ SUPABASE_KEY=
 ```
 
 ### 2. Create & enter a virtual environment
-Run the command `python3 -m venv .venv` and then either `source .venv/bin/activate` or `.venv/Scripts/activate` for Windows.
+Run the command `python3 -m venv .venv` and then either `source .venv/bin/activate` for Mac & Linux, or `.venv/Scripts/activate` for Windows.
 
 ### 3. Install dependencies
 Once inside the virtual environment, run the command `pip install -r requirements.txt`.
