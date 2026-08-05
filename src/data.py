@@ -1,8 +1,7 @@
 import os
 import json
-from datetime import datetime
-from supabase import create_client, Client
 from datetime import datetime, timedelta
+from supabase import create_client, Client
 from dotenv import load_dotenv
 from stripe import StripeClient
 
@@ -50,73 +49,6 @@ def set_guild_interaction_count(guild_id, count):
         supabase.table("guilds").update({ "interactions_this_month": count }).eq("guild_id", guild_id).execute()
     except Exception as e:
         print(f"Unable to set guild interaction count: {e}")
-
-def get_stripe_subscription_id(owner_id):
-    try:
-        response = supabase.table("users").select("stripe_subscription_id").eq("user_id", owner_id).maybe_single().execute()
-        return response.data["stripe_subscription_id"] if response.data else None
-    except Exception as e:
-        print(f"Unable to get stripe subscription ID: {e}")
-        return None
-
-def get_stripe_customer_id(guild_id):
-    try:
-        owner_id = get_registered_guild_owner(guild_id)
-
-        if not owner_id:
-            return None
-
-        user_response = supabase.table("users").select("stripe_customer_id").eq("user_id", owner_id).maybe_single().execute()
-        user_data = user_response.data
-
-        if not user_data or user_data["stripe_customer_id"] is None:
-            return None
-
-        return user_data["stripe_customer_id"]
-    except Exception as e:
-        print(f"Unable to get Stripe customer ID: {e}")
-        return None
-
-def get_guild_interaction_limit(guild_id):
-    try:
-        owner_id = get_registered_guild_owner(guild_id)
-        subscription_id = get_stripe_subscription_id(owner_id)
-
-        if not subscription_id:
-            return 200
-
-        subscription = stripe_client.v1.subscriptions.retrieve(subscription_id)
-        plan = json.loads(subscription["plan"]["metadata"]["features"])
-
-        return plan['interactions'] or 200
-    except Exception as e:
-        print(f"Unable to get guild interaction limit: {e}")
-        return 200
-
-def check_guild_interaction_limit_hit(guild_id):
-    try:
-        response = supabase.table("guilds").select("interactions_this_month, interaction_start_date").eq("guild_id", guild_id).maybe_single().execute()
-
-        interactions_this_month = response.data["interactions_this_month"] if response.data else 0
-        raw_interaction_start_date = response.data["interaction_start_date"]
-
-        if interactions_this_month is None or raw_interaction_start_date is None:
-            return False
-
-        interaction_start_date = datetime.fromisoformat(raw_interaction_start_date.rstrip("Z"))
-
-        now = datetime.now()
-        one_month_ago = now - timedelta(days=30)
-
-        interaction_limit = get_guild_interaction_limit(guild_id)
-
-        if (interactions_this_month >= interaction_limit and interaction_start_date >= one_month_ago):
-            return True
-
-        return False
-    except Exception as e:
-        print(f"Unable to check guild interaction limit hit: {e}")
-        return None
 
 def guild_is_registered(guild_id):
     try:
@@ -167,11 +99,3 @@ def get_model_choice(guild_id):
     except Exception as e:
         print(f"Unable to get model choice: {e}")
         return "gpt-5.4-nano"
-
-def check_guild_premium_status(guild_id):
-    try:
-        response = supabase.table("guilds").select("premium").eq("guild_id", guild_id).maybe_single().execute()
-        return response.data["premium"] if response.data else False
-    except Exception as e:
-        print(f"Unable to check guild premium status: {e}")
-        return False

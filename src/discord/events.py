@@ -1,7 +1,7 @@
 import os
 import json
 
-from data import get_guild_interaction_count, set_guild_interaction_count, check_guild_interaction_limit_hit, register_guild, guild_is_registered, insert_error_log, update_registered_guild_owner, get_model_choice
+from data import get_guild_interaction_count, set_guild_interaction_count, register_guild, guild_is_registered, insert_error_log, update_registered_guild_owner, get_model_choice
 from kv import get_kv, set_kv
 from discord.messages import Messages
 from ai.agent import Agent
@@ -36,10 +36,6 @@ class Events:
 
                 guild_id = event_data["guild_id"]
 
-                if check_guild_interaction_limit_hit(guild_id):
-                    await Messages.create_message(channel_id, ":warning: You've reached your monthly interaction limit. Visit the [Pricing](https://www.agenti.bot/pricing) page to learn more about increasing your limit.")
-                    return
-
                 interaction_count = get_guild_interaction_count(guild_id)
                 set_guild_interaction_count(guild_id, interaction_count + 1)
 
@@ -64,7 +60,7 @@ class Events:
                     insert_error_log(guild_id, author_id, event_data["content"], str(e))
                     await Messages.create_message(channel_id, ":bangbang: Something went wrong. If this issue persists, [Contact Support](https://www.agenti.bot/contact) for further assistance.")
                     return
-                
+
             case "GUILD_CREATE":
                 guild_id = event_data["id"]
                 owner_id = event_data["owner_id"]
@@ -104,7 +100,7 @@ class Events:
             case "GUILD_UPDATE":
                 update_registered_guild_owner(event_data["guild_id"], event_data["owner_id"])
                 return
-            
+
             case "GUILD_DELETE":
                 set_kv("guild_count", get_kv("guild_count") - 1)
                 return
