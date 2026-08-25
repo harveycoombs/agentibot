@@ -1,13 +1,10 @@
 import os
-import json
-from datetime import datetime, timedelta
+from datetime import datetime
 from supabase import create_client, Client
 from dotenv import load_dotenv
-from stripe import StripeClient
 
 load_dotenv()
 
-stripe_client = StripeClient(os.getenv("STRIPE_SECRET_KEY"))
 supabase: Client = create_client(os.getenv("SUPABASE_URL"), os.getenv("SUPABASE_KEY"))
 
 def register_guild(guild_id, owner_id):
@@ -99,3 +96,32 @@ def get_model_choice(guild_id):
     except Exception as e:
         print(f"Unable to get model choice: {e}")
         return "gpt-5.4-nano"
+
+def get_ledger_record(user_id: str, provider: str, month: int, year: int):
+     try:
+          response = supabase.table("ledger").select("*").eq("user_id", user_id).eq("provider", provider).eq("month", month).eq("year", year).maybe_single().execute()
+          return response.data if response.data else None
+     except Exception as e:
+          print(f"Unable to get ledger record: {e}")
+
+def insert_ledger_record(user_id: str, provider: str, input_tokens: int, output_tokens: int, month: int, year: int):
+     try:
+          response = supabase.table("ledger").insert({ "user_id": user_id, "provider": provider, "input_tokens": input_tokens, "output_tokens": output_tokens, "month": month, "year": year }).execute()
+          return response.data if response.data else None
+     except Exception as e:
+          print(f"Unable to insert ledger record: {e}")
+
+def update_ledger_record(user_id: str, provider: str, input_tokens: int, output_tokens: int, month: int, year: int):
+     try:
+          response = supabase.table("ledger").update({ "input_tokens": input_tokens, "output_tokens": output_tokens }).eq("user_id", user_id).eq("provider", provider).eq("month", month).eq("year", year).execute()
+          return response.data if response.data else None
+     except Exception as e:
+          print(f"Unable to update ledger record: {e}")
+
+def get_user_api_keys(user_id: str):
+     try:
+          response = supabase.table("users").select("openai_api_key, xai_api_key, google_api_key, anthropic_api_key").eq("id", user_id).maybe_single().execute()
+          return response.data if response.data else None
+     except Exception as e:
+          print(f"Unable to get user API keys: {e}")
+          return None

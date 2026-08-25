@@ -1,7 +1,7 @@
 import os
 import json
 
-from data import get_guild_interaction_count, set_guild_interaction_count, register_guild, guild_is_registered, insert_error_log, update_registered_guild_owner, get_model_choice
+from data import get_guild_interaction_count, get_registered_guild_owner, set_guild_interaction_count, register_guild, guild_is_registered, insert_error_log, update_registered_guild_owner, get_model_choice, get_user_api_keys
 from kv import get_kv, set_kv
 from discord.messages import Messages
 from ai.agent import Agent
@@ -39,13 +39,30 @@ class Events:
                 interaction_count = get_guild_interaction_count(guild_id)
                 set_guild_interaction_count(guild_id, interaction_count + 1)
 
+                owner_id = get_registered_guild_owner(guild_id)
+
+
+                api_keys = get_user_api_keys(owner_id) if owner_id else None
+               
+                if not api_keys:
+                    await Messages.create_message(channel_id, ":bangbang: No API keys are configured for this server. If you are the owner, please configure your API keys in your [account settings](https://agenti.bot/manage).")
+                    return
+                
                 try:
                     if len(event_data["attachments"]) > 0:
-                        response = generate_response_to_image(model, event_data["content"].replace(f"<@!{os.getenv('APPLICATION_ID')}>", "").strip(), event_data["attachments"][0]["url"])
+                        response = generate_response_to_image(
+                             api_keys["openai_api_key"],
+                             api_keys["xai_api_key"],
+                             api_keys["google_api_key"],
+                             api_keys["anthropic_api_key"],
+                             model, 
+                             event_data["content"].replace(f"<@!{os.getenv('APPLICATION_ID')}>", "").strip(), 
+                             event_data["attachments"][0]["url"]
+                        )
                         await Messages.create_message(channel_id, response[:2000])
                         return
 
-                    agent = Agent(context=event_data, model=model)
+                    agent = Agent(context=event_data, model=model, api_keys=api_keys)
                     response = await agent.respond(event_data["content"].replace(f"<@!{os.getenv('APPLICATION_ID')}>", "").strip())
 
                     if len(response) > 2000:
@@ -60,7 +77,7 @@ class Events:
                     insert_error_log(guild_id, author_id, event_data["content"], str(e))
                     await Messages.create_message(channel_id, ":bangbang: Something went wrong. If this issue persists, [Contact Support](https://www.agenti.bot/contact) for further assistance.")
                     return
-
+                
             case "GUILD_CREATE":
                 guild_id = event_data["id"]
                 owner_id = event_data["owner_id"]
@@ -100,7 +117,7 @@ class Events:
             case "GUILD_UPDATE":
                 update_registered_guild_owner(event_data["guild_id"], event_data["owner_id"])
                 return
-
+            
             case "GUILD_DELETE":
                 set_kv("guild_count", get_kv("guild_count") - 1)
                 return

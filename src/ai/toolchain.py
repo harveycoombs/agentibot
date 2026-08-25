@@ -11,7 +11,7 @@ from discord.guilds import Guilds
 from exception import AgentiBotException
 from data import get_guild_interaction_count
 from ai.images import generate_image
-
+ 
 def get_bot_creator() -> str:
     """Gets the creator of you, the bot."""
     return "[Harvey Coombs](https://harveycoombs.com)"
@@ -42,7 +42,7 @@ async def add_role(role_name: str, guild_id: str, message_author_id: str, target
 
     if role is None:
         raise AgentiBotException(":warning: The provided role does not exist.")
-
+    
     await Roles.add_role_to_user(guild_id, message_author_id if target_user_id is None else target_user_id, role["id"])
     return f":white_check_mark: I have added the '{role_name}' role."
 
@@ -57,8 +57,8 @@ async def remove_role(role_name: str, guild_id: str, author_id: str, target_id: 
         role = None
 
     if role is None:
-        raise AgentiBotException(":warning: The provided role does not exist.")
-
+        raise AgentiBotException(f":warning: The provided role does not exist.")
+    
     await Roles.remove_role_from_user(guild_id, author_id if target_id is None else target_id, role["id"])
     return f":white_check_mark: I have removed the '{role_name}' role."
 
@@ -128,7 +128,7 @@ async def create_voice_channel(channel_name: str, guild_id: str, message_author_
             break
         else:
             raise AgentiBotException(":no_entry_sign: You do not have permission to create channels.")
-
+        
     new_channel_id = await Channels.create_channel(guild_id, channel_name, 2, category_name)
     return f":white_check_mark: I have created the <#{new_channel_id}> channel."
 
@@ -148,7 +148,7 @@ async def delete_channel(channel_name: str, guild_id: str, author_id: str) -> st
             break
         else:
             raise AgentiBotException(":no_entry_sign: You do not have permission to delete channels.")
-
+        
     channels = await Channels.get_channels(guild_id)
     channel = next((channel for channel in channels if channel["name"].strip().lower() == channel_name.strip().lower()), None)
 
@@ -186,7 +186,7 @@ async def rename_channel(guild_id: str, channel_name: str, new_name: str, messag
     return f":white_check_mark: I have renamed the <#{channel['id']}> channel to '{new_name}'."
 
 async def delete_message(channel_id: str, message_id: str, guild_id: str, author_id: str) -> str:
-    """Deletes a message. Input should be a string with the message's ID."""
+    """Deletes a message. Input should be a string with the message's ID.""" 
     member = await Members.get_member(guild_id, author_id)
     roles = await Roles.get_roles(guild_id)
     guild = await Guilds.get_guild(guild_id)
@@ -201,7 +201,7 @@ async def delete_message(channel_id: str, message_id: str, guild_id: str, author
             break
         else:
             raise AgentiBotException(":no_entry_sign: You do not have permission to delete messages.")
-
+        
     await Messages.delete_message(channel_id, message_id)
     return ":white_check_mark: I have deleted the referenced message."
 
@@ -221,7 +221,7 @@ async def bulk_delete_messages(amount: int, channel_id: str, guild_id: str, auth
             break
         else:
             raise AgentiBotException(":no_entry_sign: You do not have permission to delete messages.")
-
+        
     await Messages.bulk_delete_messages(channel_id, amount)
     return f":white_check_mark: I have deleted {amount} messages."
 
@@ -241,7 +241,7 @@ async def ban_member(member_id: str, reason: str, guild_id: str, author_id: str)
             break
         else:
             raise AgentiBotException(":no_entry_sign: You do not have permission to ban members.")
-
+        
     await Members.ban_member(guild_id, member_id, reason)
     return f":white_check_mark: I have banned <@{member_id}>."
 
@@ -278,7 +278,7 @@ async def kick_member(member_id: str, guild_id: str, author_id: str) -> str:
             break
         else:
             raise AgentiBotException(":no_entry_sign: You do not have permission to kick members.")
-
+        
     await Members.remove_member(guild_id, member_id)
     return f":white_check_mark: I have kicked <@{member_id}>."
 
@@ -363,7 +363,7 @@ async def update_server(guild_id: str, message_author_id: str, name: str = None,
         "name": name,
         "description": description
     })
-
+    
     return ":white_check_mark: I have updated the server."
 
 async def summarise_channel_messages(channel_id: str, limit: int = 50) -> str:
