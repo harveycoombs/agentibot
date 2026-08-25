@@ -1,6 +1,7 @@
 aiohttp
 websockets
 langchain[openai,xai,google,anthropic]
+langchain-google-genai
 redis
 supabase
 python-dotenv
